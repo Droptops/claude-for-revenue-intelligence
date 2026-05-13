@@ -46,6 +46,7 @@ def _label_for_ratio(ratio: float | None, t: Thresholds) -> str:
 def _confidence(consulting_spend: float, implementation_spend: float, data_source: str, ratio_defined: bool) -> str:
     if not ratio_defined:
         return "LOW"
+    data_source = data_source.upper()
     if data_source == "CRM" and consulting_spend > 0 and implementation_spend > 0:
         return "HIGH"
     if data_source in {"CRM_PARTIAL", "MIXED"}:

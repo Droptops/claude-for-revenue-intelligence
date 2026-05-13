@@ -2,18 +2,18 @@
 
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 
-This file is the **practice profile** for the `claude-for-revenue-intelligence` repository. Every plugin (AE, Sales Leadership, RevOps, Competitive Intel) reads from this file at start-up. It is the contract between the plugin system and your workflow.
+This file is the committed **practice profile template** for the `claude-for-revenue-intelligence` repository. Your filled-in profile belongs in `CLAUDE.local.md`, which is ignored by git. Every plugin (AE, Sales Leadership, RevOps, Competitive Intel) should read `CLAUDE.local.md` at start-up when it exists, then fall back to this template for demos.
 
-The committed copy of this file is a **template**. The first time you run the system, you fill it in locally. The filled-in copy stays on your machine; only the template version is committed to the repository.
+The committed copy of this file is a **template**. The first time you run the system, copy it to `CLAUDE.local.md` and fill that copy in locally. The filled-in copy stays on your machine; only the template version is committed to the repository.
 
 ## How to use
 
 You have two ways to fill in the profile:
 
 1. **Guided:** run the cold-start interview with `claude --profile`. Claude reads each question in the **Interview** section below, prompts you, and writes your answers into the **Profile fields** YAML block at the bottom of this file.
-2. **Manual:** edit this file directly. Answer each question inline if you like, then fill in the YAML block at the bottom. The plugins only read the YAML block — the interview text is for your benefit.
+2. **Manual:** copy this file to `CLAUDE.local.md`, answer each question inline if you like, then fill in the YAML block at the bottom of the local copy. The plugins only read the YAML block; the interview text is for your benefit.
 
-When you are done, the practice profile is local-only. Do not commit your filled-in answers. The `.gitignore` for this repository keeps your edits to this file out of version control once you flip a local flag (see `QUICKSTART.md`).
+When you are done, the practice profile is local-only. Do not commit your filled-in answers. The `.gitignore` for this repository ignores `CLAUDE.local.md` (see `QUICKSTART.md`).
 
 ## Interview
 
