@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
-# schema/outcome_telemetry
+# enterprise-account-based/schema/outcome_telemetry
 
 Tracks what happens after the contract is signed: implementation progress, post-sale news signals, contract diffs, and renewal indicators. The slot is the bridge between booked revenue and retained revenue. Web-monitoring inputs that contribute to this slot must respect each target site's `robots.txt` and Terms of Service.
 

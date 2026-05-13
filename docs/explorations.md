@@ -7,13 +7,13 @@ being captured.
 
 1. **Operator-tunable anti-qualification bands per segment**
 
-   The anti-qualification scorer uses 3.0 and 1.5 as default ratio thresholds.
-   It is open whether those thresholds should vary by segment, deal size, or
-   sales motion, since a services-heavy buying pattern may mean different
-   things in different books of business.
+   The reference `enterprise-account-based` skill uses 3.0 and 1.5 as default
+   ratio thresholds. It is open whether those thresholds should vary by segment,
+   deal size, or sales motion, since a services-heavy buying pattern may mean
+   different things in different books of business.
 
-   Current thinking: defaults are a starting point; per-segment overrides may
-   be necessary above a certain operator scale.
+   Current thinking: defaults are a skill-level starting point; per-segment or
+   per-fork overrides may be necessary above a certain operator scale.
 
    What would resolve it: empirical study on cohort data.
 

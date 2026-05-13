@@ -2,12 +2,8 @@
 """Anti-qualification scorer.
 
 Computes the ratio of consulting / services spend to implementation /
-product spend, and labels the opportunity by the system-default
-thresholds:
-
-    ratio > 3.0        -> POLITICAL_COVER
-    ratio < 1.5        -> REAL_CHANGE
-    1.5 <= ratio <= 3.0 -> AMBIGUOUS
+product spend, and labels the opportunity by thresholds loaded from the
+active skill's theory constants.
 
 The ratio is a signal, not a verdict. Every output is a draft for
 reviewer judgment.
@@ -16,21 +12,54 @@ reviewer judgment.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from pathlib import Path
+from typing import Any, Mapping
+import sys
+
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from skills.loader import load_active_skill  # noqa: E402
 
 
 @dataclass(frozen=True)
 class Thresholds:
-    political_cover_min: float = 3.0
-    real_change_max: float = 1.5
+    political_cover_min: float
+    real_change_max: float
 
-
-DEFAULTS = Thresholds()
 
 _DRAFT_NOTE = (
     "This output is a draft for reviewer judgment. "
     "Ratio is one signal; interpret in context."
 )
+
+
+def active_skill_thresholds() -> Thresholds:
+    """Return anti-qualification thresholds from the active skill."""
+
+    skill = load_active_skill(ROOT)
+    values = skill.theory_constants.get("anti_qualification")
+    if not isinstance(values, dict):
+        raise ValueError(
+            f"active skill {skill.name!r} does not define anti_qualification constants"
+        )
+    return Thresholds(
+        political_cover_min=float(values["political_cover_min"]),
+        real_change_max=float(values["real_change_max"]),
+    )
+
+
+def _coerce_thresholds(thresholds: Thresholds | Mapping[str, Any] | None) -> Thresholds:
+    if thresholds is None:
+        return active_skill_thresholds()
+    if isinstance(thresholds, Thresholds):
+        return thresholds
+    return Thresholds(
+        political_cover_min=float(thresholds["political_cover_min"]),
+        real_change_max=float(thresholds["real_change_max"]),
+    )
 
 
 def _label_for_ratio(ratio: float | None, t: Thresholds) -> str:
@@ -63,7 +92,7 @@ def score_opportunity(
     implementation_spend: float,
     *,
     data_source: str = "CRM",
-    thresholds: Thresholds = DEFAULTS,
+    thresholds: Thresholds | Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Score one opportunity.
 
@@ -79,8 +108,9 @@ def score_opportunity(
         One of "CRM", "CRM_PARTIAL", "MIXED", "ESTIMATED". Controls
         confidence.
     thresholds :
-        Override of system defaults.
+        Optional override. When omitted, values are read from the active skill.
     """
+    thresholds = _coerce_thresholds(thresholds)
     if consulting_spend < 0 or implementation_spend < 0:
         raise ValueError("spend values must be non-negative")
 
