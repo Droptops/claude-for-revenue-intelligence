@@ -122,6 +122,33 @@ WORKFLOW_POLICIES: dict[str, WorkflowPolicy] = {
         cacheable_context=True,
         escalation_triggers=("board package", "CEO/CFO narrative", "material forecast call"),
     ),
+    "market_share_tracker": WorkflowPolicy(
+        workflow="market_share_tracker",
+        min_reasoning_rank=2,
+        max_relative_cost=3,
+        latency_preference="MEDIUM",
+        default_output_tokens=1_400,
+        cacheable_context=True,
+        escalation_triggers=("category board packet", "market share reversal", "conflicting demand sources"),
+    ),
+    "campaign_roi_tracker": WorkflowPolicy(
+        workflow="campaign_roi_tracker",
+        min_reasoning_rank=1,
+        max_relative_cost=3,
+        latency_preference="LOW",
+        default_output_tokens=1_000,
+        cacheable_context=True,
+        escalation_triggers=("budget reallocation", "attribution conflict", "enterprise campaign postmortem"),
+    ),
+    "search_intent_mapper": WorkflowPolicy(
+        workflow="search_intent_mapper",
+        min_reasoning_rank=2,
+        max_relative_cost=6,
+        latency_preference="MEDIUM",
+        default_output_tokens=1_600,
+        cacheable_context=True,
+        escalation_triggers=("category narrative rewrite", "competitor intercept strategy", "large keyword universe"),
+    ),
 }
 
 
@@ -249,6 +276,9 @@ def _demo() -> None:
         ("renewal_expansion_radar", 40_000, True, False),
         ("executive_forecast_memo", 80_000, True, True),
         ("win_loss_pattern_miner", 260_000, False, False),
+        ("market_share_tracker", 32_000, False, True),
+        ("campaign_roi_tracker", 9_000, False, False),
+        ("search_intent_mapper", 180_000, False, False),
     ]
     print("model_arbitration - demo run")
     print("Relative routing only; prices and exact model aliases are operator-configured.")

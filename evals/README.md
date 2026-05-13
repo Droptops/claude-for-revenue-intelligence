@@ -9,6 +9,8 @@ cases for the repo's routing and scoring logic.
 
 - `revenue_play_eval_cases.jsonl`: expected outcomes for pipeline risk, renewal
   radar, schema health, and model arbitration.
+- `growth_eval_cases.jsonl`: expected outcomes for market-share posture,
+  campaign ROI, search intent, and growth model arbitration.
 
 Run the test suite:
 

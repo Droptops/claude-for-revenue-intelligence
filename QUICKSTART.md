@@ -30,6 +30,9 @@ python agents/trigger_event_monitor/pre_announcement_watcher.py
 python core/model_arbitration.py
 python plugins/ae/best_next_first_dollar.py
 python plugins/customer-success/renewal_radar.py
+python plugins/growth/market_share_tracker.py
+python plugins/growth/campaign_roi_tracker.py
+python plugins/growth/search_intent_mapper.py
 python plugins/revops/schema_health.py
 python plugins/sales-leadership/board_vs_plan_scorer.py
 python plugins/sales-leadership/pipeline_risk_radar.py

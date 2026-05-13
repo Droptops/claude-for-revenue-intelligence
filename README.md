@@ -38,6 +38,7 @@ Plugins are persona-shaped views over the same schema. They do not introduce new
 - **`sales-leadership`** — pipeline-level views, anti-qualification cohort reporting.
 - **`revops`** — schema health, source quality, coverage gaps.
 - **`customer-success`** — renewal risk and expansion-fit radar.
+- **`growth`** — market-share posture, campaign ROI/payback, search intent, and category-demand capture.
 - **`competitive-intel`** — competitor signals from `trigger_events` and `outcome_telemetry`.
 
 See [`plugins/`](plugins/README.md).
@@ -48,6 +49,7 @@ End-to-end workflows that compose agents and plugins. Each cookbook is meant to 
 
 - **Morning dossier** — daily per-account briefing assembled across all six schema slots.
 - **Revenue command center** — weekly forecast / daily inspection loop that runs schema health, pipeline risk, renewal/expansion radar, and model arbitration.
+- **Growth command center** — category-demand, campaign ROI, and search-intent loop for market creation and capture.
 - **Pre-announcement watcher** — flags publicly observable pre-announcement signals (earnings cadence, hiring, exec movement, regulatory filings). (cookbook planned; see `agents/trigger_event_monitor/pre_announcement_watcher.py` for the agent module)
 - **Signal velocity monitor** — tracks rate-of-change on `trigger_events` and `outcome_telemetry` per account.
 - **Renewal radar** — assembles `outcome_telemetry` and `funnel_telemetry` into renewal-risk surfacing.
@@ -85,7 +87,7 @@ The GitHub Actions workflow in `.github/workflows/validate.yml` runs the same te
 
 `core/model_arbitration.py` provides a token-aware routing policy for each built workflow. It picks the smallest Claude model tier that satisfies context size, reasoning need, relative cost band, and high-stakes escalation flags. This keeps cheap deterministic checks on a fast model path while preserving an explicit escalation route for board-facing forecast or renewal narratives.
 
-Design rationale and public reference links live in [`docs/revenue_intelligence_design_notes.md`](docs/revenue_intelligence_design_notes.md).
+Design rationale and public reference links live in [`docs/revenue_intelligence_design_notes.md`](docs/revenue_intelligence_design_notes.md) and [`docs/growth_intelligence_design_notes.md`](docs/growth_intelligence_design_notes.md).
 
 ## Roadmap
 
