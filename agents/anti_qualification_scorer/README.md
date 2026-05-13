@@ -1,0 +1,6 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+# agents/anti_qualification_scorer
+
+This agent computes the **anti-qualification ratio** for an opportunity: the ratio of the buyer's consulting / services spend to their implementation / product spend on the same initiative. The result is one of three labels — `POLITICAL_COVER` (ratio `> 3.0`, heavy consulting / light implementation), `REAL_CHANGE` (ratio `< 1.5`, implementation-heavy), or `AMBIGUOUS` (in between, or undefined when implementation spend is zero). Operators may override the thresholds in `CLAUDE.md` (`aq_thresholds`); the scorer accepts them as parameters and passes them through unmodified.
+
+The scorer is a deterministic weighted heuristic, not a learned model. Confidence is `HIGH` only when both spend values are sourced from the CRM and both are positive; `MEDIUM` when one is estimated; `LOW` otherwise or when the ratio is undefined. Every output carries the `draft_note` `"This output is a draft for reviewer judgment. Ratio is one signal; interpret in context."` — the ratio is a behavioral signal about how the buyer is allocating budget, not a verdict on whether the deal will close. No customer, exec, or vendor names appear in any output; the `opportunity_id` is the only identifier emitted.
