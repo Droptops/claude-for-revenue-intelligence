@@ -9,7 +9,7 @@ when no local profile exists.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 import json
 import re
@@ -94,20 +94,45 @@ def _parse_skill_file(path: Path) -> dict[str, Any]:
     return data
 
 
+def _is_safe_relative_path(value: str) -> bool:
+    paths = (PurePosixPath(value), PureWindowsPath(value))
+    return not any(path.is_absolute() or ".." in path.parts for path in paths)
+
+
 def _validate_skill(data: dict[str, Any], path: Path) -> None:
     missing = sorted(REQUIRED_FIELDS - data.keys())
     if missing:
         raise SkillLoadError(f"{path} is missing required fields: {', '.join(missing)}")
+    for key in ("name", "description"):
+        if not isinstance(data[key], str) or not data[key].strip():
+            raise SkillLoadError(f"{path} field {key!r} must be a non-empty string")
     if not isinstance(data["schema_slots"], list) or not data["schema_slots"]:
         raise SkillLoadError(f"{path} must define at least one schema slot")
     for slot in data["schema_slots"]:
-        if not isinstance(slot, dict) or not slot.get("name") or not slot.get("path"):
+        if not isinstance(slot, dict):
+            raise SkillLoadError(f"{path} has an invalid schema_slots entry: {slot!r}")
+        if not isinstance(slot.get("name"), str) or not slot["name"].strip():
+            raise SkillLoadError(f"{path} has a schema slot without a valid name")
+        if not isinstance(slot.get("path"), str) or not slot["path"].strip():
+            raise SkillLoadError(f"{path} has a schema slot without a valid path")
+        if not _is_safe_relative_path(slot["path"]):
             raise SkillLoadError(f"{path} has an invalid schema_slots entry: {slot!r}")
     for key in ("agent_roster", "plugin_defaults", "cookbook_set"):
         if not isinstance(data[key], list):
             raise SkillLoadError(f"{path} field {key!r} must be a list")
+        for value in data[key]:
+            if not isinstance(value, str) or not value.strip():
+                raise SkillLoadError(f"{path} field {key!r} contains an invalid entry")
     if not isinstance(data["theory_constants"], dict):
         raise SkillLoadError(f"{path} field 'theory_constants' must be a table")
+    if "connector_bindings" in data:
+        if not isinstance(data["connector_bindings"], list):
+            raise SkillLoadError(f"{path} field 'connector_bindings' must be a list")
+        for value in data["connector_bindings"]:
+            if not isinstance(value, str) or not value.strip():
+                raise SkillLoadError(
+                    f"{path} field 'connector_bindings' contains an invalid entry"
+                )
 
 
 def load_skill_file(path: Path) -> SkillConfig:

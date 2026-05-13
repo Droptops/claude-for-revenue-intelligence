@@ -65,6 +65,12 @@ class SkillLoaderTests(unittest.TestCase):
             self.assertIsInstance(skill.cookbook_set, list)
             self.assertIsInstance(skill.theory_constants, dict)
 
+    def test_legacy_operator_template_is_not_loaded_as_motion_skill(self):
+        legacy = ROOT / "skills" / "deal_review_template" / "SKILL.md"
+
+        with self.assertRaises(skill_loader.SkillLoadError):
+            skill_loader.load_skill_file(legacy)
+
     def test_reference_skill_preserves_schema_slots_and_aq_behavior(self):
         skill = skill_loader.load_skill("enterprise-account-based", ROOT)
         slot_paths = skill.schema_slot_paths()
@@ -112,6 +118,56 @@ class SkillLoaderTests(unittest.TestCase):
             self.assertTrue((skill.skill_dir / "schema").is_dir())
             for path in skill.schema_slot_paths().values():
                 self.assertTrue(path.exists(), path)
+
+    def test_invalid_skill_metadata_fails_loudly(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            skill_file = Path(tmp) / "SKILL.md"
+            skill_file.write_text(
+                """+++
+{
+  "name": "bad",
+  "description": "",
+  "schema_slots": [],
+  "agent_roster": [],
+  "plugin_defaults": [],
+  "cookbook_set": [],
+  "theory_constants": {}
+}
++++
+# Bad Skill
+""",
+                encoding="utf-8",
+            )
+
+            with self.assertRaises(skill_loader.SkillLoadError):
+                skill_loader.load_skill_file(skill_file)
+
+    def test_schema_slot_paths_must_be_safe_relative_paths(self):
+        for unsafe_path in ("../schema.md", "C:/tmp/schema.md"):
+            with self.subTest(unsafe_path=unsafe_path):
+                with tempfile.TemporaryDirectory() as tmp:
+                    skill_file = Path(tmp) / "SKILL.md"
+                    skill_file.write_text(
+                        f"""+++
+{{
+  "name": "bad",
+  "description": "Bad skill with an unsafe path.",
+  "schema_slots": [
+    {{ "name": "escape", "path": "{unsafe_path}" }}
+  ],
+  "agent_roster": [],
+  "plugin_defaults": [],
+  "cookbook_set": [],
+  "theory_constants": {{}}
+}}
++++
+# Bad Skill
+""",
+                        encoding="utf-8",
+                    )
+
+                    with self.assertRaises(skill_loader.SkillLoadError):
+                        skill_loader.load_skill_file(skill_file)
 
 
 if __name__ == "__main__":
