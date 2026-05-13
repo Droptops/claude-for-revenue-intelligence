@@ -11,6 +11,32 @@
 
 No external Python dependencies required. All agent and scorer modules use the standard library only.
 
-## 3. Cold-Start Interview
+## 3. Validate the Repo
 
-Complete the cold-start interview by filling in `CLAUDE.md` at the repo root. See the interview prompts in that file.
+Run the unit tests:
+
+```bash
+python -m unittest discover -s tests
+```
+
+Run the demo smoke checks:
+
+```bash
+python agents/anti_qualification_scorer/aq_scorer.py
+python agents/signature_authority_miner/sec_edgar_fetcher.py
+python agents/signature_authority_miner/signatory_extractor.py
+python agents/trigger_event_monitor/earnings_parser.py
+python agents/trigger_event_monitor/pre_announcement_watcher.py
+python plugins/ae/best_next_first_dollar.py
+python plugins/sales-leadership/board_vs_plan_scorer.py
+```
+
+## 4. Cold-Start Interview
+
+Copy `CLAUDE.md` to `CLAUDE.local.md`, then fill in the YAML block in the local copy. `CLAUDE.local.md` is ignored by git so local practice details do not get committed.
+
+```bash
+cp CLAUDE.md CLAUDE.local.md
+```
+
+See the interview prompts in `CLAUDE.md`. When running plugins, use `CLAUDE.local.md` if present and fall back to the template only for demos.

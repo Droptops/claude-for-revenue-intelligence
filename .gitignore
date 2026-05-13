@@ -1,0 +1,25 @@
+# SPDX-License-Identifier: Apache-2.0
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local operator profile and connector secrets
+CLAUDE.local.md
+*.local.yaml
+*.local.yml
+*.local.json
+.env
+.env.*
+
+# Local competitive-intel inputs
+plugins/competitive-intel/competitor_list.yaml
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

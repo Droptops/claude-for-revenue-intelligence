@@ -73,7 +73,7 @@ def _score_persona_coverage(opp: dict[str, Any], w: Weights) -> float:
 
 
 def _score_trigger_events(opp: dict[str, Any], w: Weights) -> float:
-    count = int(opp.get("trigger_event_count", 0))
+    count = max(0, int(opp.get("trigger_event_count", 0)))
     capped = min(count, w.trigger_event_cap)
     if w.trigger_event_cap == 0:
         return 0.0

@@ -67,7 +67,17 @@ Connector contracts live under [`connectors/`](connectors/README.md). Stubs only
 
 ## Getting Started
 
-See [QUICKSTART.md](QUICKSTART.md) for prerequisites, install, and the cold-start interview that produces a per-installation `CLAUDE.md` practice profile.
+See [QUICKSTART.md](QUICKSTART.md) for prerequisites, validation, and the cold-start interview that produces a per-installation `CLAUDE.local.md` practice profile.
+
+## Validation
+
+The repository has no required third-party Python dependencies. Run the unit tests with:
+
+```bash
+python -m unittest discover -s tests
+```
+
+The GitHub Actions workflow in `.github/workflows/validate.yml` runs the same tests plus smoke checks for every built agent and plugin demo.
 
 ## Roadmap
 

@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: Apache-2.0
+
+[project]
+name = "claude-for-revenue-intelligence"
+version = "0.1.0"
+description = "Reference data model, agents, plugins, and cookbooks for revenue intelligence workflows."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [
+  { name = "Droptops" }
+]
+dependencies = []
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = []
