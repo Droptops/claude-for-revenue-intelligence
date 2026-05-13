@@ -1,0 +1,17 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+# evals
+
+Small deterministic eval fixtures for the built revenue-intelligence modules.
+These are not benchmarks and do not claim model performance. They are guardrail
+cases for the repo's routing and scoring logic.
+
+## Files
+
+- `revenue_play_eval_cases.jsonl`: expected outcomes for pipeline risk, renewal
+  radar, schema health, and model arbitration.
+
+Run the test suite:
+
+```bash
+python -m unittest discover -s tests
+```
