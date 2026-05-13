@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
-# schema/persona_graph
+# enterprise-account-based/schema/persona_graph
 
 Stores the influence map for an account: who matters, what role they play, and how they relate to one another. The schema is intentionally pseudonymous — `person_id` is an opaque key, and no real names appear in any committed file. Real names live only in the agent's local working store, keyed by `person_id`, and never round-trip through this repository.
 

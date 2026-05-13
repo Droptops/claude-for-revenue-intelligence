@@ -1,9 +1,12 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 # plugins/
 
-Plugins are persona-shaped views over the schema. They do not introduce new data; they assemble role-specific summaries by reading the schema slots populated by agents.
+Plugins are persona-shaped views over the active skill's schema. They do not
+introduce new data; they assemble role-specific summaries by reading the schema
+slots populated by agents.
 
-Status values: `built` (directory present with a runnable demo), `stub` (directory present, scaffolding only), `planned` (no directory yet).
+Status values: `built` (directory present with a runnable demo), `stub`
+(directory present, scaffolding only), `planned` (no directory yet).
 
 | Plugin | Folder | Status |
 |---|---|---|

@@ -1,11 +1,15 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 # agents/
 
-One agent per schema slot, plus a cross-slot `anti_qualification_scorer`. Agents have a single responsibility — populate or watch one part of the schema — and are designed to be readable in isolation.
+Agents are small modules that populate or watch schema slots from the active
+skill. They should read schema contracts and theory constants through
+`skills/loader.py`; do not hardcode motion-specific thresholds or slot sets in
+agent code.
 
-Status values: `built` (directory present with a runnable demo), `stub` (directory present, scaffolding only), `planned` (no directory yet).
+Status values: `built` (directory present with a runnable demo), `stub`
+(directory present, scaffolding only), `planned` (no directory yet).
 
-| Agent | File | Status |
+| Agent | Folder | Status |
 |---|---|---|
 | Signature Authority Miner | `signature_authority_miner/` | built |
 | Persona Graph Builder | `persona_graph_builder/` | planned |
