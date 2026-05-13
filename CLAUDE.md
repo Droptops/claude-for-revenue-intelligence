@@ -21,7 +21,7 @@ Answer each question below. No customer names, exec names, or deal names anywher
 
 1. **What is your primary role?** (AE / Sales Leader / RevOps / Competitive Intel / Other)
 
-2. **What is your typical deal size range?** (e.g. `$25k–$150k ARR`, `$500k+ ARR`)
+2. **What is your typical deal size range?** (e.g. `$60k–$240k ARR`, `$500k+ ARR`)
 
 3. **What CRM are you using?** (Do not enter credentials here — credentials live in `connectors/` with the connector's own setup flow.)
 
@@ -49,7 +49,7 @@ The plugins only read this YAML block. Fill in the values; leave keys you do not
 
 ```yaml
 role: null                # one of: AE | SALES_LEADER | REVOPS | COMPETITIVE_INTEL | OTHER
-deal_size_range: null     # free-text label, e.g. "$25k-$150k ARR"
+deal_size_range: null     # free-text label, e.g. "$60k-$240k ARR"
 crm: null                 # one of: SALESFORCE | HUBSPOT | OTHER | NONE
 call_platform: null       # one of: GONG | CHORUS | NONE
 avg_cycle_days: null      # integer

@@ -85,6 +85,14 @@ The GitHub Actions workflow in `.github/workflows/validate.yml` runs the same te
 - **Day 2.** Schema column contracts for all six slots; cold-start interview that writes a per-installation `CLAUDE.md` practice profile; first agent (`signature_authority_miner`) reaches a runnable stub.
 - **Day 3.** First end-to-end cookbook (morning dossier) reads from at least three schema slots; AE plugin Best Next First Dollar scorer; sales-leadership plugin with board-vs-plan delta scorer; trigger-event monitor and anti-qualification scorer agents. MCP connector stubs deferred; see `connectors/README.md` for planned integrations.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for repository scope, what does and does not belong here, and the pull-request checklist. Operator-specific data of any kind belongs in `CLAUDE.local.md` and other locally-ignored files, not in this repository.
+
+## Influences and Prior Art
+
+This repository draws on the public discourse of revenue-intelligence product categories (Clari, Gong, Salesforce Einstein, 6sense), on the public canon of sales qualification and methodology (Challenger, MEDDIC, ODEAL, BANT, ProActive Selling, Strategic Selling / Miller Heiman heritage as taught by Korn Ferry), and on adjacent buyer-behavior analysis traditions (services-to-software ratio, per-seat COGS analysis). It is an independent code-level implementation of patterns visible in that public landscape, applied through the lens of formal sales training the author has received over a fourteen-year career — not a derivative of any single product, methodology, or employer.
+
 ## Disclaimers
 
 - **Drafts, not decisions.** All agent and cookbook outputs are drafts intended for human reviewer judgment. Nothing here claims completeness or accuracy.
