@@ -149,6 +149,33 @@ WORKFLOW_POLICIES: dict[str, WorkflowPolicy] = {
         cacheable_context=True,
         escalation_triggers=("category narrative rewrite", "competitor intercept strategy", "large keyword universe"),
     ),
+    "intent_sequence_builder": WorkflowPolicy(
+        workflow="intent_sequence_builder",
+        min_reasoning_rank=2,
+        max_relative_cost=3,
+        latency_preference="MEDIUM",
+        default_output_tokens=1_600,
+        cacheable_context=True,
+        escalation_triggers=("executive account sequence", "competitor replacement motion", "sensitive contact policy"),
+    ),
+    "competitive_battlecard_builder": WorkflowPolicy(
+        workflow="competitive_battlecard_builder",
+        min_reasoning_rank=2,
+        max_relative_cost=6,
+        latency_preference="MEDIUM",
+        default_output_tokens=2_000,
+        cacheable_context=True,
+        escalation_triggers=("board-visible competitor", "evidence conflict", "strategic displacement motion"),
+    ),
+    "cdn_feature_monitor": WorkflowPolicy(
+        workflow="cdn_feature_monitor",
+        min_reasoning_rank=1,
+        max_relative_cost=3,
+        latency_preference="LOW",
+        default_output_tokens=1_000,
+        cacheable_context=True,
+        escalation_triggers=("competitor launch signal", "pricing or packaging change", "terms or robots conflict"),
+    ),
 }
 
 
@@ -279,6 +306,9 @@ def _demo() -> None:
         ("market_share_tracker", 32_000, False, True),
         ("campaign_roi_tracker", 9_000, False, False),
         ("search_intent_mapper", 180_000, False, False),
+        ("intent_sequence_builder", 18_000, False, False),
+        ("competitive_battlecard_builder", 55_000, True, False),
+        ("cdn_feature_monitor", 12_000, False, False),
     ]
     print("model_arbitration - demo run")
     print("Relative routing only; prices and exact model aliases are operator-configured.")

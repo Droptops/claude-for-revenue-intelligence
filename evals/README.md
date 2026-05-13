@@ -11,6 +11,9 @@ cases for the repo's routing and scoring logic.
   radar, schema health, and model arbitration.
 - `growth_eval_cases.jsonl`: expected outcomes for market-share posture,
   campaign ROI, search intent, and growth model arbitration.
+- `intent_activation_eval_cases.jsonl`: expected outcomes for account-level
+  intent sequencing, competitive battlecards, public asset monitoring, and
+  related model arbitration.
 
 Run the test suite:
 
