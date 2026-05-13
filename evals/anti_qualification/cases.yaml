@@ -1,0 +1,189 @@
+- id: aq_001
+  category: happy_path
+  description: "Heavy consulting buyer is clear political cover"
+  inputs:
+    opportunity_id: aq_001
+    consulting_spend: 800000.0
+    implementation_spend: 200000.0
+    data_source: CRM
+  expected:
+    anti_qual_label: POLITICAL_COVER
+    confidence: HIGH
+    ratio_approx: 4.0
+- id: aq_002
+  category: happy_path
+  description: "Implementation-heavy buyer is real change"
+  inputs:
+    opportunity_id: aq_002
+    consulting_spend: 125000.0
+    implementation_spend: 500000.0
+    data_source: CRM
+  expected:
+    anti_qual_label: REAL_CHANGE
+    confidence: HIGH
+    ratio_approx: 0.25
+- id: aq_003
+  category: happy_path
+  description: "Middle-band ratio remains ambiguous"
+  inputs:
+    opportunity_id: aq_003
+    consulting_spend: 400000.0
+    implementation_spend: 200000.0
+    data_source: CRM_PARTIAL
+  expected:
+    anti_qual_label: AMBIGUOUS
+    confidence: MEDIUM
+    ratio_approx: 2.0
+- id: aq_004
+  category: happy_path
+  description: "Slightly above the political-cover threshold"
+  inputs:
+    opportunity_id: aq_004
+    consulting_spend: 320000.0
+    implementation_spend: 100000.0
+    data_source: MIXED
+  expected:
+    anti_qual_label: POLITICAL_COVER
+    confidence: MEDIUM
+    ratio_approx: 3.2
+- id: aq_005
+  category: happy_path
+  description: "Estimated implementation-heavy buyer stays low confidence"
+  inputs:
+    opportunity_id: aq_005
+    consulting_spend: 90000.0
+    implementation_spend: 100000.0
+    data_source: ESTIMATED
+  expected:
+    anti_qual_label: REAL_CHANGE
+    confidence: LOW
+    ratio_approx: 0.9
+- id: aq_006
+  category: edge_case
+  description: "Zero implementation spend produces undefined ratio"
+  inputs:
+    opportunity_id: aq_006
+    consulting_spend: 250000.0
+    implementation_spend: 0.0
+    data_source: CRM
+  expected:
+    anti_qual_label: AMBIGUOUS
+    confidence: LOW
+- id: aq_007
+  category: edge_case
+  description: "Exactly 3.0 remains ambiguous"
+  inputs:
+    opportunity_id: aq_007
+    consulting_spend: 300000.0
+    implementation_spend: 100000.0
+    data_source: CRM
+  expected:
+    anti_qual_label: AMBIGUOUS
+    confidence: HIGH
+    ratio_approx: 3.0
+- id: aq_008
+  category: edge_case
+  description: "Exactly 1.5 remains ambiguous"
+  inputs:
+    opportunity_id: aq_008
+    consulting_spend: 150000.0
+    implementation_spend: 100000.0
+    data_source: CRM
+  expected:
+    anti_qual_label: AMBIGUOUS
+    confidence: HIGH
+    ratio_approx: 1.5
+- id: aq_009
+  category: edge_case
+  description: "Negative spend is rejected"
+  inputs:
+    opportunity_id: aq_009
+    consulting_spend: -1.0
+    implementation_spend: 100000.0
+    data_source: CRM
+  expected:
+    raises: ValueError
+- id: aq_010
+  category: happy_path
+  description: "CRM with both positive spends is high confidence"
+  inputs:
+    opportunity_id: aq_010
+    consulting_spend: 210000.0
+    implementation_spend: 100000.0
+    data_source: CRM
+  expected:
+    anti_qual_label: AMBIGUOUS
+    confidence: HIGH
+    ratio_approx: 2.1
+- id: aq_011
+  category: edge_case
+  description: "Mixed source produces medium confidence"
+  inputs:
+    opportunity_id: aq_011
+    consulting_spend: 210000.0
+    implementation_spend: 100000.0
+    data_source: MIXED
+  expected:
+    anti_qual_label: AMBIGUOUS
+    confidence: MEDIUM
+    ratio_approx: 2.1
+- id: aq_012
+  category: edge_case
+  description: "Estimated source produces low confidence"
+  inputs:
+    opportunity_id: aq_012
+    consulting_spend: 210000.0
+    implementation_spend: 100000.0
+    data_source: ESTIMATED
+  expected:
+    anti_qual_label: AMBIGUOUS
+    confidence: LOW
+    ratio_approx: 2.1
+- id: aq_013
+  category: adversarial
+  description: "Tiny implementation spend creates very high ratio"
+  inputs:
+    opportunity_id: aq_013
+    consulting_spend: 1000000.0
+    implementation_spend: 100.0
+    data_source: CRM
+  expected:
+    anti_qual_label: POLITICAL_COVER
+    confidence: HIGH
+    ratio_approx: 10000.0
+- id: aq_014
+  category: adversarial
+  description: "Very large numbers keep the same middle-band label"
+  inputs:
+    opportunity_id: aq_014
+    consulting_spend: 2000000000000.0
+    implementation_spend: 1000000000000.0
+    data_source: CRM
+  expected:
+    anti_qual_label: AMBIGUOUS
+    confidence: HIGH
+    ratio_approx: 2.0
+- id: aq_015
+  category: adversarial
+  description: "Just inside the political-cover band edge"
+  inputs:
+    opportunity_id: aq_015
+    consulting_spend: 301000.0
+    implementation_spend: 100000.0
+    data_source: CRM
+  expected:
+    anti_qual_label: POLITICAL_COVER
+    confidence: HIGH
+    ratio_approx: 3.01
+- id: aq_016
+  category: adversarial
+  description: "Just inside the real-change band edge"
+  inputs:
+    opportunity_id: aq_016
+    consulting_spend: 149000.0
+    implementation_spend: 100000.0
+    data_source: CRM
+  expected:
+    anti_qual_label: REAL_CHANGE
+    confidence: HIGH
+    ratio_approx: 1.49

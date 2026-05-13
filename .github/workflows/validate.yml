@@ -22,6 +22,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Run unit tests
         run: python -m unittest discover -s tests
+      - name: Run evals
+        run: python evals/run_evals.py
       - name: Run demo smoke checks
         run: |
           python agents/anti_qualification_scorer/aq_scorer.py

@@ -1,0 +1,214 @@
+- id: bnfd_001
+  category: ranking
+  description: "Strong clone, coverage, triggers, and outcome rank first"
+  inputs:
+    opportunities:
+      - opportunity_id: bnfd_001_high
+        days_in_stage: 10
+        anti_qualification_ratio: 1.2
+        clone_profile_match: true
+        trigger_event_count: 3
+        persona_coverage_score: 0.8
+        outcome_signal: STRONG
+      - opportunity_id: bnfd_001_mid
+        days_in_stage: 20
+        anti_qualification_ratio: 2.5
+        clone_profile_match: false
+        trigger_event_count: 1
+        persona_coverage_score: 0.7
+        outcome_signal: WEAK
+      - opportunity_id: bnfd_001_low
+        days_in_stage: 120
+        anti_qualification_ratio: 4.0
+        clone_profile_match: false
+        trigger_event_count: 0
+        persona_coverage_score: 0.2
+        outcome_signal: NONE
+  expected:
+    expected_order:
+      - bnfd_001_high
+      - bnfd_001_mid
+      - bnfd_001_low
+- id: bnfd_002
+  category: ranking
+  description: "Fresh lower-coverage opportunity outranks stale opportunity"
+  inputs:
+    opportunities:
+      - opportunity_id: bnfd_002_fresh
+        days_in_stage: 12
+        anti_qualification_ratio: 1.4
+        clone_profile_match: true
+        trigger_event_count: 1
+        persona_coverage_score: 0.45
+        outcome_signal: WEAK
+      - opportunity_id: bnfd_002_stale
+        days_in_stage: 120
+        anti_qualification_ratio: 1.1
+        clone_profile_match: true
+        trigger_event_count: 2
+        persona_coverage_score: 0.5
+        outcome_signal: WEAK
+      - opportunity_id: bnfd_002_dark
+        days_in_stage: 8
+        anti_qualification_ratio: 3.8
+        clone_profile_match: false
+        trigger_event_count: 0
+        persona_coverage_score: 0.1
+        outcome_signal: UNKNOWN
+  expected:
+    expected_order:
+      - bnfd_002_fresh
+      - bnfd_002_stale
+      - bnfd_002_dark
+- id: bnfd_003
+  category: ranking
+  description: "Four-way ranking separates outcome and coverage signals"
+  inputs:
+    opportunities:
+      - opportunity_id: bnfd_003_clone_low
+        days_in_stage: 25
+        anti_qualification_ratio: 2.0
+        clone_profile_match: true
+        trigger_event_count: 0
+        persona_coverage_score: 0.25
+        outcome_signal: UNKNOWN
+      - opportunity_id: bnfd_003_coverage
+        days_in_stage: 25
+        anti_qualification_ratio: 2.0
+        clone_profile_match: false
+        trigger_event_count: 2
+        persona_coverage_score: 0.9
+        outcome_signal: WEAK
+      - opportunity_id: bnfd_003_strong
+        days_in_stage: 25
+        anti_qualification_ratio: 1.6
+        clone_profile_match: true
+        trigger_event_count: 1
+        persona_coverage_score: 0.75
+        outcome_signal: STRONG
+      - opportunity_id: bnfd_003_none
+        days_in_stage: 95
+        anti_qualification_ratio: 3.5
+        clone_profile_match: false
+        trigger_event_count: 0
+        persona_coverage_score: 0.35
+        outcome_signal: NONE
+  expected:
+    expected_order:
+      - bnfd_003_strong
+      - bnfd_003_coverage
+      - bnfd_003_clone_low
+      - bnfd_003_none
+- id: bnfd_004
+  category: score_band
+  description: "High signal opportunity lands in the high score band"
+  inputs:
+    opportunity_id: bnfd_004
+    days_in_stage: 10
+    anti_qualification_ratio: 1.2
+    clone_profile_match: true
+    trigger_event_count: 3
+    persona_coverage_score: 0.8
+    outcome_signal: STRONG
+  expected:
+    score_min: 84.0
+    score_max: 86.0
+- id: bnfd_005
+  category: score_band
+  description: "Middle signal opportunity lands in the mid score band"
+  inputs:
+    opportunity_id: bnfd_005
+    days_in_stage: 45
+    anti_qualification_ratio: 2.5
+    clone_profile_match: false
+    trigger_event_count: 1
+    persona_coverage_score: 0.5
+    outcome_signal: WEAK
+  expected:
+    score_min: 25.0
+    score_max: 26.5
+- id: bnfd_006
+  category: score_band
+  description: "Low signal stale opportunity clamps at zero"
+  inputs:
+    opportunity_id: bnfd_006
+    days_in_stage: 200
+    anti_qualification_ratio: 4.0
+    clone_profile_match: false
+    trigger_event_count: 0
+    persona_coverage_score: 0.0
+    outcome_signal: NONE
+  expected:
+    score_min: 0.0
+    score_max: 0.1
+- id: bnfd_007
+  category: confidence
+  description: "Clone match and coverage above 0.6 produce high confidence"
+  inputs:
+    opportunity_id: bnfd_007
+    days_in_stage: 10
+    anti_qualification_ratio: 2.0
+    clone_profile_match: true
+    trigger_event_count: 1
+    persona_coverage_score: 0.7
+    outcome_signal: UNKNOWN
+  expected:
+    confidence: HIGH
+- id: bnfd_008
+  category: confidence
+  description: "One strong confidence input produces medium confidence"
+  inputs:
+    opportunity_id: bnfd_008
+    days_in_stage: 10
+    anti_qualification_ratio: 2.0
+    clone_profile_match: true
+    trigger_event_count: 1
+    persona_coverage_score: 0.2
+    outcome_signal: UNKNOWN
+  expected:
+    confidence: MEDIUM
+- id: bnfd_009
+  category: confidence
+  description: "Neither clone nor high coverage produces low confidence"
+  inputs:
+    opportunity_id: bnfd_009
+    days_in_stage: 10
+    anti_qualification_ratio: 2.0
+    clone_profile_match: false
+    trigger_event_count: 1
+    persona_coverage_score: 0.2
+    outcome_signal: UNKNOWN
+  expected:
+    confidence: LOW
+- id: bnfd_010
+  category: edge_case
+  description: "Negative trigger count contributes zero trigger points"
+  inputs:
+    opportunity_id: bnfd_010
+    days_in_stage: 10
+    anti_qualification_ratio: 2.5
+    clone_profile_match: false
+    trigger_event_count: -4
+    persona_coverage_score: 0.5
+    outcome_signal: UNKNOWN
+  expected:
+    score_min: 20.0
+    score_max: 21.0
+    score_breakdown:
+      trigger_events: 0.0
+- id: bnfd_011
+  category: edge_case
+  description: "Days-in-stage penalty saturates at the penalty window"
+  inputs:
+    opportunity_id: bnfd_011
+    days_in_stage: 999
+    anti_qualification_ratio: 1.0
+    clone_profile_match: true
+    trigger_event_count: 3
+    persona_coverage_score: 1.0
+    outcome_signal: STRONG
+  expected:
+    score_min: 75.0
+    score_max: 75.0
+    score_breakdown:
+      days_in_stage_penalty: -15.0
