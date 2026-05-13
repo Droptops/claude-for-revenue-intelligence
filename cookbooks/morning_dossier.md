@@ -10,7 +10,7 @@ This cookbook produces a one-page **morning briefing** for an AE's top 3–5 pri
 - **Cold-start complete.** The repo-root `CLAUDE.md` has the `Profile fields` YAML block filled in. At minimum: `role = AE`, `avg_cycle_days`, `aq_ratio_baseline`.
 - **At least one account** has rows in `schema/funnel_telemetry` and `schema/trigger_events`.
 - **Persona graph populated** (`schema/persona_graph`) for the priority accounts, even if sparse. An empty graph degrades the coverage-gap step to a one-line "no data" note.
-- **Competitor list at `plugins/competitive-intel/competitor_list.yaml`** (operator-local, not committed). Empty list is allowed — the pre-announcement step degrades to category-level signals.
+- **Competitor list at `plugins/competitive-intel/competitor_list.yaml`** (operator-local, not committed). A template is committed at `plugins/competitive-intel/competitor_list.yaml.example` — copy it and fill in your own entries. Empty list is allowed; the pre-announcement step degrades to category-level signals.
 - **AE plugin loaded** (`plugins/ae/`). Each step below invokes the plugin in one of its three modes.
 
 ## Step-by-step

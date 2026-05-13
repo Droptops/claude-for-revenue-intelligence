@@ -1,0 +1,10 @@
+# SPDX-License-Identifier: Apache-2.0
+# Operator-local competitor list. Copy to competitor_list.yaml and fill in your own entries.
+# Do not commit real competitor names to version control.
+competitor_categories:
+  - category: "Category A"
+    domains: []       # e.g. ["competitor-a.com"]
+    keywords: []      # e.g. ["Product X", "Vendor A"]
+  - category: "Category B"
+    domains: []
+    keywords: []

@@ -27,6 +27,8 @@ Per-opportunity telemetry that supports clone-profile matching, anti-qualificati
 - `anti_qualification_ratio < 1.5` → `REAL_CHANGE`: implementation-heavy spend. Buyer is actually deploying.
 - `1.5 ≤ ratio ≤ 3.0` → `AMBIGUOUS`: insufficient signal to label.
 
+`POLITICAL_COVER` refers to organizational change-management cover — a buyer acquiring a project to satisfy internal political obligations rather than to drive operational change. It does not refer to voter politics or any protected characteristic.
+
 The thresholds are the system default. Operators may override them in `CLAUDE.md` after running the cold-start interview question on their own closed-won cohort.
 
 ## Notes on data quality / known gaps

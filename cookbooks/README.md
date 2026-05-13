@@ -1,11 +1,16 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 # cookbooks/
 
 End-to-end workflows that compose agents and plugins. Each cookbook is intended to be readable as a worked example, not packaged as a product.
 
-- **Morning dossier** — daily per-account briefing assembled across the six schema slots.
-- **Pre-announcement watcher** — flags publicly observable pre-announcement signals (earnings cadence, hiring, exec movement, regulatory filings). Subject to the web-monitoring compliance disclaimer in the root README.
-- **Signal velocity monitor** — tracks rate-of-change on `trigger_events` and `outcome_telemetry` per account.
-- **Renewal radar** — assembles `outcome_telemetry` and `funnel_telemetry` into renewal-risk surfacing.
-- **Win/loss interview integrator** — folds post-mortem interview notes into `conversation_evidence`.
+Status values: `built` (cookbook file present with steps and sample output), `stub` (file present, scaffolding only), `planned` (no file yet).
 
-All five are stubs at Day 1. The morning dossier reaches a runnable end-to-end form in Day 3.
+| Cookbook | File | Status |
+|---|---|---|
+| morning_dossier | `morning_dossier.md` | built |
+| pre_announcement_watcher | `pre_announcement_watcher.md` | planned (cookbook planned; see `agents/trigger_event_monitor/pre_announcement_watcher.py` for the agent module) |
+| signal_velocity_monitor | `signal_velocity_monitor.md` | planned |
+| renewal_radar | `renewal_radar.md` | planned |
+| win_loss_interview_integrator | `win_loss_interview_integrator.md` | planned |
+
+Subject to the web-monitoring compliance disclaimer in the root README: any cookbook that observes external sites (pre-announcement watcher, signal velocity monitor) must be used in compliance with each target site's `robots.txt` and Terms of Service.

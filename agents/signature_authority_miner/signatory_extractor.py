@@ -50,7 +50,8 @@ def _confidence_for_block(has_name: bool, has_title: bool, has_date: bool) -> fl
         score += 0.3
     if has_date:
         score += 0.2
-    return round(score, 2)
+    # Cap at 0.9 — regex heuristic, not a calibrated probability.
+    return round(min(0.9, score), 2)
 
 
 def extract_signatories(filing_text: str, source_url: str) -> list[dict[str, Any]]:

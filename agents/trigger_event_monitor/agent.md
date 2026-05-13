@@ -16,7 +16,7 @@ You monitor five event types:
 ## Inputs
 
 - `account_id` — internal identifier
-- `competitor_list` — operator-supplied YAML at `plugins/competitive-intel/competitor_list.yaml` on the operator's machine. **No vendor names are hardcoded in this agent or in this repository.** If `competitor_list` is empty, run with category-level signals only.
+- `competitor_list` — operator-supplied YAML at `plugins/competitive-intel/competitor_list.yaml` on the operator's machine. A template is committed at `plugins/competitive-intel/competitor_list.yaml.example`; copy it to `competitor_list.yaml` and fill in your own entries. **No vendor names are hardcoded in this agent or in this repository.** If `competitor_list` is empty, run with category-level signals only.
 - `monitoring_config` — per-source toggles, snapshot window, rate-limit overrides.
 
 ## Output

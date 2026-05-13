@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 # claude-for-revenue-intelligence
 
 claude-for-revenue-intelligence is a reference data model and Claude agent implementation for revenue intelligence workflows. The repository is organized around a six-part schema; agents, plugins, and cookbooks read from and write to that schema. Nothing here is a vendor product or a commercial benchmark — it is a reference implementation meant to be read end-to-end and adapted.
@@ -8,7 +9,7 @@ The schema is the headline. Each slot is a column-level data contract under `/sc
 
 - **`signature_authority`** — actual signatory data from public SEC filings and contract corpora; pen-on-paper authority, not titles.
 - **`persona_graph`** — relationship and influence map per account; who decides, who blocks, who champions, and how those edges are observed.
-- **`funnel_telemetry`** — first-contact date, touch count, days to close, opportunity counter, outlier filter. Includes an anti-qualification column: `consulting_to_implementation_spend_ratio`. A ratio greater than 3 marks a political-cover buyer; less than 1.5 marks a real-change buyer. The column is meant to short-circuit pursuits that look qualified by activity but are not qualified by intent.
+- **`funnel_telemetry`** — first-contact date, touch count, days to close, opportunity counter, outlier filter. Includes an anti-qualification column: `anti_qualification_ratio`. The ratio is computed as `consulting_spend / implementation_spend`. A ratio greater than 3 marks a political-cover buyer; less than 1.5 marks a real-change buyer. The column is meant to short-circuit pursuits that look qualified by activity but are not qualified by intent.
 - **`outcome_telemetry`** — post-implementation news, contract diffs, renewal signals; the schema slot that tells you whether the deal you closed actually became a customer.
 - **`conversation_evidence`** — call references (Gong/Chorus-compatible), closed-lost post-mortems, feature-gap flags. Pointers, not transcripts, so the schema remains source-of-truth-neutral.
 - **`trigger_events`** — earnings language, hiring signals, exec movement, regulatory filings, competitor signals. Timestamped and source-linked.
@@ -45,7 +46,7 @@ See [`plugins/`](plugins/README.md).
 End-to-end workflows that compose agents and plugins. Each cookbook is meant to be a readable example, not a packaged product.
 
 - **Morning dossier** — daily per-account briefing assembled across all six schema slots.
-- **Pre-announcement watcher** — flags publicly observable pre-announcement signals (earnings cadence, hiring, exec movement, regulatory filings).
+- **Pre-announcement watcher** — flags publicly observable pre-announcement signals (earnings cadence, hiring, exec movement, regulatory filings). (cookbook planned; see `agents/trigger_event_monitor/pre_announcement_watcher.py` for the agent module)
 - **Signal velocity monitor** — tracks rate-of-change on `trigger_events` and `outcome_telemetry` per account.
 - **Renewal radar** — assembles `outcome_telemetry` and `funnel_telemetry` into renewal-risk surfacing.
 - **Win/loss interview integrator** — folds post-mortem interview notes into `conversation_evidence`.
@@ -70,9 +71,9 @@ See [QUICKSTART.md](QUICKSTART.md) for prerequisites, install, and the cold-star
 
 ## Roadmap
 
-- **Day 1.** Repo skeleton: six-part schema slots, agent / plugin / cookbook / connector stubs, README + QUICKSTART + CLAUDE.md scaffold. (This commit.)
+- **Day 1.** Repo skeleton: six-part schema slots, agent / plugin / cookbook / connector stubs, README + QUICKSTART + CLAUDE.md scaffold.
 - **Day 2.** Schema column contracts for all six slots; cold-start interview that writes a per-installation `CLAUDE.md` practice profile; first agent (`signature_authority_miner`) reaches a runnable stub.
-- **Day 3.** First end-to-end cookbook (morning dossier) reads from at least three schema slots; first MCP connector stub becomes a runnable read-only adapter.
+- **Day 3.** First end-to-end cookbook (morning dossier) reads from at least three schema slots; AE plugin Best Next First Dollar scorer; sales-leadership plugin with board-vs-plan delta scorer; trigger-event monitor and anti-qualification scorer agents. MCP connector stubs deferred; see `connectors/README.md` for planned integrations.
 
 ## Disclaimers
 
