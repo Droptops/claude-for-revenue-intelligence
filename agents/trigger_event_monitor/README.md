@@ -10,9 +10,9 @@ that contract is
 
 Every row is emitted with `reviewed = false` and `flagged_for_action = false`;
 downstream consumers must not act on unreviewed rows. The agent never hardcodes
-vendor or competitor names. Those come from the operator's local
-`plugins/competitive-intel/competitor_list.yaml`, which is not committed to this
-repository.
+vendor or competitor names. Those come from an operator-local list (e.g.
+`competitor_list.local.yaml`) which is git-ignored by the `*.local.yaml`
+pattern in `.gitignore`.
 
 ## Modules
 
