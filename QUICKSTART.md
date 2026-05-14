@@ -4,19 +4,27 @@
 ## 1. Prerequisites
 
 - Python 3.10 or later.
-- An Anthropic API key (`ANTHROPIC_API_KEY`).
-- Optional credentials for any source systems you intend to wire up: Salesforce, Gong, Outreach, Slack, Google Drive.
+- An Anthropic API key (`ANTHROPIC_API_KEY`) if you run Claude-backed flows.
+- Optional credentials for source systems you intend to wire up: Salesforce,
+  Gong, Outreach, Slack, Google Drive, or fork-specific connectors.
 
 ## 2. Install
 
-No external Python dependencies required. All agent and scorer modules use the standard library only.
+No external Python dependencies are required. All agent, loader, and scorer
+modules use the standard library only.
 
-## 3. Validate the Repo
+## 3. Validate The Repo
 
 Run the unit tests:
 
 ```bash
 python -m unittest discover -s tests
+```
+
+Run the evals:
+
+```bash
+python evals/run_evals.py
 ```
 
 Run the demo smoke checks:
@@ -43,10 +51,57 @@ python plugins/sales-leadership/pipeline_risk_radar.py
 
 ## 4. Cold-Start Interview
 
-Copy `CLAUDE.md` to `CLAUDE.local.md`, then fill in the YAML block in the local copy. `CLAUDE.local.md` is ignored by git so local practice details do not get committed.
+Run the cold-start helper to create `CLAUDE.local.md`. The file is ignored by
+git so local practice details do not get committed.
 
 ```bash
-cp CLAUDE.md CLAUDE.local.md
+python tools/cold_start.py
 ```
 
-See the interview prompts in `CLAUDE.md`. When running plugins, use `CLAUDE.local.md` if present and fall back to the template only for demos.
+For a non-interactive default install:
+
+```bash
+python tools/cold_start.py --non-interactive --skill enterprise-account-based --force
+```
+
+List installed motion skills and bindings with:
+
+```bash
+python tools/inspect_skill.py
+```
+
+When agents run, `skills/loader.py` reads `CLAUDE.local.md`, loads the selected
+skill, and binds:
+
+- schema slots
+- agent roster
+- plugin defaults
+- cookbook set
+- connector bindings
+- theory constants
+
+If `CLAUDE.local.md` is absent or has no `active_skill`, the loader falls back to
+`enterprise-account-based`.
+
+See the interview prompts in `CLAUDE.md`. When running plugins, use
+`CLAUDE.local.md` if present and fall back to the template only for demos.
+
+## 5. Create A New Skill From An Example
+
+Copy an example fork into a new installed skill:
+
+```bash
+python tools/new_skill.py plg-self-serve skills/my-plg-motion
+```
+
+Then set `active_skill: my-plg-motion` in `CLAUDE.local.md` and inspect it:
+
+```bash
+python tools/inspect_skill.py
+```
+
+The PLG example has a tiny runnable demo:
+
+```bash
+python examples/forks/plg-self-serve/demo.py
+```

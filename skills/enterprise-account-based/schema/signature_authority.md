@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
-# schema/signature_authority
+# enterprise-account-based/schema/signature_authority
 
 Captures who can sign what, on behalf of which legal entity, up to which dollar threshold. The slot is populated by parsing public filings (SEC EDGAR Material Contracts exhibits, DEF 14A proxy statements, 8-K filings) and contract corpora. Every row is treated as a programmatic extraction until a human reviewer marks it verified. Rows without `reviewer_verified = true` must not be used to drive outreach or commercial decisions.
 

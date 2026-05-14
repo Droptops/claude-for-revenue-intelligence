@@ -20,8 +20,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Run skill loader tests
+        run: python -m unittest tests.test_skill_loader
       - name: Run unit tests
         run: python -m unittest discover -s tests
+      - name: Run evals
+        run: python evals/run_evals.py
+      - name: Run forkability tooling smoke checks
+        run: |
+          python tools/inspect_skill.py --json
+          python tools/cold_start.py --non-interactive --skill enterprise-account-based --profile-path /tmp/CLAUDE.local.md --force
+          python tools/new_skill.py plg-self-serve /tmp/plg-generated --force
+          python examples/forks/plg-self-serve/demo.py
       - name: Run demo smoke checks
         run: |
           python agents/anti_qualification_scorer/aq_scorer.py

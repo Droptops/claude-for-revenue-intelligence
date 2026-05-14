@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
-# schema/trigger_events
+# enterprise-account-based/schema/trigger_events
 
 A normalized log of account-level events that may justify outreach or reprioritization. Each row is one observed signal, classified by type, with a source URL, an extractor-supplied confidence score, and a reviewer flag. The slot is consumed by the AE plugin's sequence mode and by sales-leadership rollups.
 

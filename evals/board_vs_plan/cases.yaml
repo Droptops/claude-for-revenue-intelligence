@@ -1,0 +1,176 @@
+- id: bvp_001
+  category: happy_path
+  description: "Looser set A, tighter set B drops one opportunity"
+  inputs:
+    constraint_set_a:
+      min_deal_size: 50000
+      required_clone_match: false
+    constraint_set_b:
+      min_deal_size: 100000
+      required_clone_match: true
+    opportunities:
+      - opportunity_id: bvp_001_a
+        deal_size: 120000
+        clone_profile_match: true
+      - opportunity_id: bvp_001_b
+        deal_size: 70000
+        clone_profile_match: true
+  expected:
+    set_a_pass_count: 2
+    set_b_pass_count: 1
+    delta_labels:
+      bvp_001_a: PASSED_BOTH
+      bvp_001_b: PASSED_A_ONLY
+- id: bvp_002
+  category: happy_path
+  description: "Set A is looser on cycle days and coverage"
+  inputs:
+    constraint_set_a:
+      min_deal_size: 50000
+      max_cycle_days: 180
+      min_persona_coverage: 0.3
+    constraint_set_b:
+      min_deal_size: 100000
+      max_cycle_days: 90
+      min_persona_coverage: 0.6
+    opportunities:
+      - opportunity_id: bvp_002_a
+        deal_size: 140000
+        cycle_days: 80
+        persona_coverage_score: 0.7
+      - opportunity_id: bvp_002_b
+        deal_size: 90000
+        cycle_days: 120
+        persona_coverage_score: 0.45
+      - opportunity_id: bvp_002_c
+        deal_size: 40000
+        cycle_days: 60
+        persona_coverage_score: 0.7
+  expected:
+    set_a_pass_count: 2
+    set_b_pass_count: 1
+    delta_labels:
+      bvp_002_a: PASSED_BOTH
+      bvp_002_b: PASSED_A_ONLY
+      bvp_002_c: PASSED_NEITHER
+- id: bvp_003
+  category: happy_path
+  description: "Set B is looser on deal size"
+  inputs:
+    constraint_set_a:
+      min_deal_size: 150000
+      required_clone_match: false
+    constraint_set_b:
+      min_deal_size: 50000
+      required_clone_match: false
+    opportunities:
+      - opportunity_id: bvp_003_a
+        deal_size: 160000
+      - opportunity_id: bvp_003_b
+        deal_size: 90000
+      - opportunity_id: bvp_003_c
+        deal_size: 30000
+  expected:
+    set_a_pass_count: 1
+    set_b_pass_count: 2
+    delta_labels:
+      bvp_003_a: PASSED_BOTH
+      bvp_003_b: PASSED_B_ONLY
+      bvp_003_c: PASSED_NEITHER
+- id: bvp_004
+  category: happy_path
+  description: "Set B is looser because clone match is optional"
+  inputs:
+    constraint_set_a:
+      min_deal_size: 100000
+      required_clone_match: true
+      min_persona_coverage: 0.6
+    constraint_set_b:
+      min_deal_size: 100000
+      required_clone_match: false
+      min_persona_coverage: 0.3
+    opportunities:
+      - opportunity_id: bvp_004_a
+        deal_size: 120000
+        clone_profile_match: true
+        persona_coverage_score: 0.7
+      - opportunity_id: bvp_004_b
+        deal_size: 125000
+        clone_profile_match: false
+        persona_coverage_score: 0.5
+  expected:
+    set_a_pass_count: 1
+    set_b_pass_count: 2
+    delta_labels:
+      bvp_004_a: PASSED_BOTH
+      bvp_004_b: PASSED_B_ONLY
+- id: bvp_005
+  category: edge_case
+  description: "Identical sets produce only both or neither labels"
+  inputs:
+    constraint_set_a:
+      min_deal_size: 100000
+      required_clone_match: true
+    constraint_set_b:
+      min_deal_size: 100000
+      required_clone_match: true
+    opportunities:
+      - opportunity_id: bvp_005_a
+        deal_size: 140000
+        clone_profile_match: true
+      - opportunity_id: bvp_005_b
+        deal_size: 80000
+        clone_profile_match: true
+      - opportunity_id: bvp_005_c
+        deal_size: 120000
+        clone_profile_match: false
+  expected:
+    set_a_pass_count: 1
+    set_b_pass_count: 1
+    delta_labels:
+      bvp_005_a: PASSED_BOTH
+      bvp_005_b: PASSED_NEITHER
+      bvp_005_c: PASSED_NEITHER
+- id: bvp_006
+  category: edge_case
+  description: "Mixed delta buckets expose largest bucket"
+  inputs:
+    constraint_set_a:
+      min_deal_size: 100000
+      required_clone_match: false
+      min_persona_coverage: 0.4
+    constraint_set_b:
+      min_deal_size: 80000
+      required_clone_match: true
+      min_persona_coverage: 0.6
+    opportunities:
+      - opportunity_id: bvp_006_both
+        deal_size: 120000
+        clone_profile_match: true
+        persona_coverage_score: 0.7
+      - opportunity_id: bvp_006_a_only
+        deal_size: 110000
+        clone_profile_match: false
+        persona_coverage_score: 0.5
+      - opportunity_id: bvp_006_b_only
+        deal_size: 90000
+        clone_profile_match: true
+        persona_coverage_score: 0.7
+      - opportunity_id: bvp_006_neither_1
+        deal_size: 70000
+        clone_profile_match: false
+        persona_coverage_score: 0.3
+      - opportunity_id: bvp_006_neither_2
+        deal_size: 95000
+        clone_profile_match: false
+        persona_coverage_score: 0.5
+  expected:
+    set_a_pass_count: 2
+    set_b_pass_count: 2
+    largest_bucket: PASSED_NEITHER
+    delta_labels:
+      bvp_006_both: PASSED_BOTH
+      bvp_006_a_only: PASSED_A_ONLY
+      bvp_006_b_only: PASSED_B_ONLY
+      bvp_006_neither_1: PASSED_NEITHER
+      bvp_006_neither_2: PASSED_NEITHER

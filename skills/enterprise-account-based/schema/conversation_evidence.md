@@ -1,5 +1,5 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
-# schema/conversation_evidence
+# enterprise-account-based/schema/conversation_evidence
 
 An index over call recordings and their post-mortems. The slot stores summaries only — verbatim transcripts and raw audio do not enter this repository. Closed-lost post-mortems are structured to make patterns greppable across a cohort without exposing transcript content.
 

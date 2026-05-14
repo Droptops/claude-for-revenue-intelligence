@@ -3,7 +3,7 @@
 [project]
 name = "claude-for-revenue-intelligence"
 version = "0.1.0"
-description = "Reference data model, agents, plugins, and cookbooks for revenue intelligence workflows."
+description = "Forkable agent harness and skills for schema-driven revenue intelligence workflows."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }
