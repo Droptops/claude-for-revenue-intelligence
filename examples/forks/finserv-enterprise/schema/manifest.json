@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "description": "Machine-readable slot summary for the finserv enterprise fork stub.",
+  "slots": {
+    "signature_authority": { "path": "signature_authority.md", "columns": [] },
+    "persona_graph": { "path": "persona_graph.md", "columns": [] },
+    "funnel_telemetry": { "path": "funnel_telemetry.md", "columns": [] },
+    "outcome_telemetry": { "path": "outcome_telemetry.md", "columns": [] },
+    "conversation_evidence": { "path": "conversation_evidence.md", "columns": [] },
+    "trigger_events": { "path": "trigger_events.md", "columns": [] },
+    "regulatory_filings": {
+      "path": "regulatory_filings.md",
+      "columns": [
+        { "name": "account_id", "type": "string", "nullable": false },
+        { "name": "filing_type", "type": "string", "nullable": false },
+        { "name": "filing_date", "type": "date", "nullable": false },
+        { "name": "source_url", "type": "url", "nullable": true },
+        { "name": "signal_summary", "type": "string", "nullable": false },
+        { "name": "review_gate", "type": "string", "nullable": true },
+        { "name": "confidence_score", "type": "float", "nullable": false },
+        { "name": "reviewed", "type": "bool", "nullable": false }
+      ]
+    }
+  }
+}

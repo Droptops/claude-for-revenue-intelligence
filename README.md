@@ -36,6 +36,17 @@ A specialization lives in a folder with a `SKILL.md` and its own schema
 contracts. The base harness should not hardcode motion assumptions; it should
 read schema slots and theory constants from the active skill.
 
+Executable helpers make that loop concrete:
+
+```bash
+python tools/inspect_skill.py
+python tools/cold_start.py --non-interactive --skill enterprise-account-based --profile-path CLAUDE.local.md
+python tools/new_skill.py plg-self-serve skills/my-plg-motion
+```
+
+`inspect_skill.py` prints the active bindings. `cold_start.py` writes a local
+practice profile. `new_skill.py` copies an example fork into a new skill folder.
+
 ## Reference Skill
 
 The default reference skill is:
@@ -79,6 +90,8 @@ The `enterprise-account-based` skill supplies these schema slots:
 
 Column-level contracts live in `skills/enterprise-account-based/schema/`.
 The root `schema/README.md` explains why schema contracts now live per skill.
+Each schema directory also carries a `manifest.json` so tests and tools can
+validate slot contracts without scraping Markdown tables.
 
 ## Agents
 
@@ -128,7 +141,11 @@ See `cookbooks/`.
 
 ## Connectors
 
-Connector stubs bind systems of record to the active skill's schema:
+Connector stubs bind systems of record to the active skill's schema. The
+minimal code contract lives in `connectors/base.py`, with an in-memory test
+connector in `connectors/mock.py`.
+
+Reference connector names:
 
 - Salesforce
 - Gong
@@ -152,6 +169,8 @@ The repository has no required third-party Python dependencies. Run:
 ```bash
 python -m unittest discover -s tests
 python evals/run_evals.py
+python tools/inspect_skill.py --json
+python examples/forks/plg-self-serve/demo.py
 ```
 
 The GitHub Actions workflow in `.github/workflows/validate.yml` runs the tests,

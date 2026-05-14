@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "description": "Machine-readable slot summary for the healthcare patient acquisition fork stub.",
+  "slots": {
+    "referral_authority": {
+      "path": "referral_authority.md",
+      "columns": [
+        { "name": "source_id", "type": "string", "nullable": false },
+        { "name": "referral_channel", "type": "string", "nullable": false },
+        { "name": "authority_level", "type": "string", "nullable": false },
+        { "name": "last_referral_date", "type": "date", "nullable": true },
+        { "name": "evidence_summary", "type": "string", "nullable": false },
+        { "name": "reviewed", "type": "bool", "nullable": false }
+      ]
+    },
+    "episode_telemetry": {
+      "path": "episode_telemetry.md",
+      "columns": [
+        { "name": "episode_cohort_id", "type": "string", "nullable": false },
+        { "name": "service_line", "type": "string", "nullable": false },
+        { "name": "episode_start_date", "type": "date", "nullable": true },
+        { "name": "episode_status", "type": "string", "nullable": false },
+        { "name": "source", "type": "string", "nullable": false },
+        { "name": "reviewed", "type": "bool", "nullable": false }
+      ]
+    },
+    "outcome_evidence": {
+      "path": "outcome_evidence.md",
+      "columns": [
+        { "name": "episode_cohort_id", "type": "string", "nullable": false },
+        { "name": "outcome_type", "type": "string", "nullable": false },
+        { "name": "outcome_window", "type": "string", "nullable": false },
+        { "name": "outcome_summary", "type": "string", "nullable": false },
+        { "name": "evidence_source", "type": "string", "nullable": false },
+        { "name": "reviewed", "type": "bool", "nullable": false }
+      ]
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "description": "Machine-readable slot summary for the PLG self-serve fork stub.",
+  "slots": {
+    "product_usage_telemetry": {
+      "path": "product_usage_telemetry.md",
+      "columns": [
+        { "name": "workspace_id", "type": "string", "nullable": false },
+        { "name": "account_id", "type": "string", "nullable": true },
+        { "name": "active_user_count", "type": "int", "nullable": false },
+        { "name": "core_action_count", "type": "int", "nullable": false },
+        { "name": "usage_window_start", "type": "date", "nullable": false },
+        { "name": "usage_window_end", "type": "date", "nullable": false },
+        { "name": "source", "type": "string", "nullable": false }
+      ]
+    },
+    "activation_events": {
+      "path": "activation_events.md",
+      "columns": [
+        { "name": "workspace_id", "type": "string", "nullable": false },
+        { "name": "event_type", "type": "string", "nullable": false },
+        { "name": "event_date", "type": "date", "nullable": false },
+        { "name": "days_from_signup", "type": "int", "nullable": false },
+        { "name": "source_event_id", "type": "string", "nullable": false },
+        { "name": "reviewed", "type": "bool", "nullable": false }
+      ]
+    },
+    "expansion_signals": {
+      "path": "expansion_signals.md",
+      "columns": [
+        { "name": "workspace_id", "type": "string", "nullable": false },
+        { "name": "signal_type", "type": "string", "nullable": false },
+        { "name": "signal_date", "type": "date", "nullable": false },
+        { "name": "signal_summary", "type": "string", "nullable": false },
+        { "name": "confidence_score", "type": "float", "nullable": false },
+        { "name": "reviewed", "type": "bool", "nullable": false }
+      ]
+    }
+  }
+}

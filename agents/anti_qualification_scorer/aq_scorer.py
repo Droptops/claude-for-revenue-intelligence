@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from skills.loader import load_active_skill  # noqa: E402
+from agents.runtime import resolve_agent_context  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -39,11 +39,11 @@ _DRAFT_NOTE = (
 def active_skill_thresholds() -> Thresholds:
     """Return anti-qualification thresholds from the active skill."""
 
-    skill = load_active_skill(ROOT)
-    values = skill.theory_constants.get("anti_qualification")
+    context = resolve_agent_context("anti_qualification_scorer", ROOT)
+    values = context.theory_constants.get("anti_qualification")
     if not isinstance(values, dict):
         raise ValueError(
-            f"active skill {skill.name!r} does not define anti_qualification constants"
+            f"active skill {context.skill.name!r} does not define anti_qualification constants"
         )
     return Thresholds(
         political_cover_min=float(values["political_cover_min"]),

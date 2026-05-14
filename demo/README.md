@@ -16,3 +16,10 @@ opportunity, and persona values are placeholders. URLs use `placeholder.invalid`
 
 The output is a draft for reviewer judgment and is intended to show how the
 scorers can be composed into an operator-facing morning workflow.
+
+The PLG fork has a separate tiny demo that proves a non-enterprise schema slot
+set can run without changing the base harness:
+
+```bash
+python examples/forks/plg-self-serve/demo.py
+```

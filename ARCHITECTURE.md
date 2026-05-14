@@ -21,6 +21,8 @@ shape:
 - The selected skill binds schema slots, agent roster, plugin defaults,
   cookbook set, connector bindings, and theory constants.
 - Agents read those bindings at runtime.
+- `agents/runtime.py` gives agents a small helper for resolving their active
+  skill context.
 
 This keeps `/agents/` motion-agnostic. An agent may know how to compute or
 transform a signal, but it should not hardcode the business theory that decides
@@ -29,7 +31,9 @@ which threshold, slot set, or buying motion is universal.
 ## Skills
 
 A skill is a self-contained specialization folder with a `SKILL.md` and schema
-contracts. The required fields are:
+contracts. Each schema directory also includes `manifest.json`, a small
+machine-readable summary that mirrors the Markdown contracts. The required
+`SKILL.md` fields are:
 
 - `name`
 - `description`
@@ -57,13 +61,17 @@ constant. It is useful for the enterprise account-based motion, so it lives in
 
 Start from an example under `examples/forks/`:
 
-1. Copy the nearest example folder into a new repository or a new folder under
-   `skills/`.
+1. Run `python tools/new_skill.py <example-name> skills/<new-skill-name>`.
 2. Rename `SKILL.md` and update `name` and `description`.
 3. Replace `schema_slots` with the slots your motion actually needs.
 4. Add or remove agent names, plugin defaults, cookbooks, connectors, and theory
    constants.
-5. Run the cold-start interview and set `active_skill` in `CLAUDE.local.md`.
+5. Run `python tools/cold_start.py` and set `active_skill` in
+   `CLAUDE.local.md`.
+
+Use `python tools/inspect_skill.py` to see the bound harness state. The PLG
+example includes `examples/forks/plg-self-serve/demo.py` as a toy executable
+proof that a non-enterprise slot set can run without changing the base harness.
 
 The example forks are deliberately thin. They prove that the base can bind a
 different schema and roster without adding motion assumptions to the harness.
