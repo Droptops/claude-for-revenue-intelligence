@@ -88,6 +88,8 @@ class SkillLoaderTests(unittest.TestCase):
         )
         for path in slot_paths.values():
             self.assertTrue(path.exists(), path)
+        manifest = skill.schema_manifest()
+        self.assertEqual(set(manifest["slots"]), set(slot_paths))
 
         thresholds = skill.theory_constants["anti_qualification"]
         self.assertEqual(thresholds["political_cover_min"], 3.0)
@@ -116,6 +118,11 @@ class SkillLoaderTests(unittest.TestCase):
             self.assertTrue((skill.skill_dir / "README.md").exists())
             self.assertTrue((skill.skill_dir / "agents.md").exists())
             self.assertTrue((skill.skill_dir / "schema").is_dir())
+            manifest = skill.schema_manifest()
+            self.assertEqual(
+                set(manifest["slots"]),
+                {slot["name"] for slot in skill.schema_slots},
+            )
             for path in skill.schema_slot_paths().values():
                 self.assertTrue(path.exists(), path)
 

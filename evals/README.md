@@ -39,6 +39,8 @@ suite-specific expected fields for scorer behavior:
   `confidence`, `score_breakdown`
 - `board_vs_plan`: `set_a_pass_count`, `set_b_pass_count`, `delta_labels`,
   `largest_bucket`
+- `forkability`: `must_include_slots`, `must_exclude_slots`,
+  `theory_constants_include`
 
 ## Run Locally
 

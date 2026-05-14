@@ -23,6 +23,11 @@ The loader in `skills/loader.py` reads the selected skill from
 `CLAUDE.local.md` and falls back to `enterprise-account-based` when no local
 selection exists.
 
+Every motion skill schema directory should include `manifest.json`, a
+machine-readable summary of the slot names and columns. Markdown remains the
+human-readable contract; the manifest gives tests and tools something stable to
+validate.
+
 ## Installed Motion Skills
 
 - [`enterprise-account-based`](enterprise-account-based/SKILL.md): the original

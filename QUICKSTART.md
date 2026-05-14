@@ -41,24 +41,23 @@ python plugins/sales-leadership/board_vs_plan_scorer.py
 
 ## 4. Cold-Start Interview
 
-Copy `CLAUDE.md` to `CLAUDE.local.md`, then fill in the YAML block in the local
-copy. `CLAUDE.local.md` is ignored by git so local practice details do not get
-committed.
+Run the cold-start helper to create `CLAUDE.local.md`. The file is ignored by
+git so local practice details do not get committed.
 
 ```bash
-cp CLAUDE.md CLAUDE.local.md
+python tools/cold_start.py
 ```
 
-The interview now starts by selecting a skill. List installed motion skills with:
+For a non-interactive default install:
 
 ```bash
-python -c "from skills.loader import list_available_skills; [print(f'{s.name}: {s.description}') for s in list_available_skills()]"
+python tools/cold_start.py --non-interactive --skill enterprise-account-based --force
 ```
 
-Write the selected identifier to the profile:
+List installed motion skills and bindings with:
 
-```yaml
-active_skill: enterprise-account-based
+```bash
+python tools/inspect_skill.py
 ```
 
 When agents run, `skills/loader.py` reads `CLAUDE.local.md`, loads the selected
@@ -76,3 +75,23 @@ If `CLAUDE.local.md` is absent or has no `active_skill`, the loader falls back t
 
 See the interview prompts in `CLAUDE.md`. When running plugins, use
 `CLAUDE.local.md` if present and fall back to the template only for demos.
+
+## 5. Create A New Skill From An Example
+
+Copy an example fork into a new installed skill:
+
+```bash
+python tools/new_skill.py plg-self-serve skills/my-plg-motion
+```
+
+Then set `active_skill: my-plg-motion` in `CLAUDE.local.md` and inspect it:
+
+```bash
+python tools/inspect_skill.py
+```
+
+The PLG example has a tiny runnable demo:
+
+```bash
+python examples/forks/plg-self-serve/demo.py
+```

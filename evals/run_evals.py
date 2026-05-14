@@ -37,6 +37,10 @@ BOARD_VS_PLAN = _load_module(
     "eval_board_vs_plan_scorer",
     ROOT / "plugins" / "sales-leadership" / "board_vs_plan_scorer.py",
 )
+SKILL_LOADER = _load_module(
+    "eval_skill_loader",
+    ROOT / "skills" / "loader.py",
+)
 
 
 class MiniYamlError(ValueError):
@@ -319,10 +323,35 @@ def eval_board_vs_plan(case: dict[str, Any]) -> list[str]:
     return failures
 
 
+def eval_forkability(case: dict[str, Any]) -> list[str]:
+    inputs = case["inputs"]
+    expected = case["expected"]
+    skill = SKILL_LOADER.load_skill_file(ROOT / inputs["skill_file"])
+    slots = {slot["name"] for slot in skill.schema_slots}
+    failures: list[str] = []
+
+    for slot in expected.get("must_include_slots", []):
+        if slot not in slots:
+            failures.append(_failure("missing slot", slot, sorted(slots)))
+    for slot in expected.get("must_exclude_slots", []):
+        if slot in slots:
+            failures.append(_failure("unexpected slot", slot, sorted(slots)))
+
+    manifest_slots = set(skill.schema_manifest().get("slots", {}))
+    if manifest_slots != slots:
+        failures.append(_failure("manifest slots", sorted(slots), sorted(manifest_slots)))
+
+    for key in expected.get("theory_constants_include", []):
+        if key not in skill.theory_constants:
+            failures.append(_failure("missing theory constant group", key, skill.theory_constants))
+    return failures
+
+
 SUITES: dict[str, Callable[[dict[str, Any]], list[str]]] = {
     "anti_qualification": eval_anti_qualification,
     "best_next_first_dollar": eval_best_next_first_dollar,
     "board_vs_plan": eval_board_vs_plan,
+    "forkability": eval_forkability,
 }
 
 

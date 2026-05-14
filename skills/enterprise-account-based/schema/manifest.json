@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "description": "Machine-readable column summary for the enterprise-account-based reference skill.",
+  "slots": {
+    "signature_authority": {
+      "path": "signature_authority.md",
+      "columns": [
+        { "name": "account_id", "type": "string", "nullable": false },
+        { "name": "legal_entity_name", "type": "string", "nullable": false },
+        { "name": "signatory_name", "type": "string_placeholder", "nullable": true },
+        { "name": "signatory_title", "type": "string", "nullable": true },
+        { "name": "signing_threshold_usd", "type": "number", "nullable": true },
+        { "name": "authority_source", "type": "enum", "nullable": false },
+        { "name": "filing_url", "type": "url", "nullable": true },
+        { "name": "extracted_at", "type": "timestamp", "nullable": false },
+        { "name": "confidence_score", "type": "float", "nullable": false },
+        { "name": "reviewer_verified", "type": "bool", "nullable": false }
+      ]
+    },
+    "persona_graph": {
+      "path": "persona_graph.md",
+      "columns": [
+        { "name": "account_id", "type": "string", "nullable": false },
+        { "name": "person_id", "type": "pseudonymous_key", "nullable": false },
+        { "name": "person_role_label", "type": "string", "nullable": false },
+        { "name": "influence_tier", "type": "int", "nullable": false },
+        { "name": "relationship_edges", "type": "json_array", "nullable": true },
+        { "name": "last_updated", "type": "timestamp", "nullable": false },
+        { "name": "data_source", "type": "string", "nullable": false }
+      ]
+    },
+    "funnel_telemetry": {
+      "path": "funnel_telemetry.md",
+      "columns": [
+        { "name": "opportunity_id", "type": "string", "nullable": false },
+        { "name": "account_id", "type": "string", "nullable": false },
+        { "name": "first_contact_date", "type": "date", "nullable": true },
+        { "name": "touch_count", "type": "int", "nullable": false },
+        { "name": "days_to_close", "type": "int", "nullable": true },
+        { "name": "outcome", "type": "enum", "nullable": false },
+        { "name": "clone_profile_match", "type": "bool", "nullable": false },
+        { "name": "anti_clone_profile_match", "type": "bool", "nullable": false },
+        { "name": "anti_qualification_ratio", "type": "float", "nullable": true },
+        { "name": "anti_qual_label", "type": "enum", "nullable": true },
+        { "name": "stage_timestamps", "type": "json_object", "nullable": true },
+        { "name": "outlier_flag", "type": "bool", "nullable": false },
+        { "name": "outlier_reason", "type": "string", "nullable": true }
+      ]
+    },
+    "outcome_telemetry": {
+      "path": "outcome_telemetry.md",
+      "columns": [
+        { "name": "account_id", "type": "string", "nullable": false },
+        { "name": "opportunity_id", "type": "string", "nullable": false },
+        { "name": "implementation_start_date", "type": "date", "nullable": true },
+        { "name": "news_signals", "type": "json_array", "nullable": true },
+        { "name": "contract_diff_detected", "type": "bool", "nullable": false },
+        { "name": "contract_diff_summary", "type": "string", "nullable": true },
+        { "name": "renewal_signal", "type": "enum", "nullable": false },
+        { "name": "last_monitored_at", "type": "timestamp", "nullable": false },
+        { "name": "monitor_source", "type": "string", "nullable": false }
+      ]
+    },
+    "conversation_evidence": {
+      "path": "conversation_evidence.md",
+      "columns": [
+        { "name": "account_id", "type": "string", "nullable": false },
+        { "name": "opportunity_id", "type": "string", "nullable": false },
+        { "name": "call_ref_id", "type": "string", "nullable": false },
+        { "name": "call_platform", "type": "enum", "nullable": false },
+        { "name": "call_date", "type": "date", "nullable": false },
+        { "name": "transcript_excerpt_summary", "type": "string", "nullable": true },
+        { "name": "closed_lost_postmortem", "type": "json_object", "nullable": true },
+        { "name": "indexed_at", "type": "timestamp", "nullable": false }
+      ]
+    },
+    "trigger_events": {
+      "path": "trigger_events.md",
+      "columns": [
+        { "name": "event_id", "type": "string", "nullable": false },
+        { "name": "account_id", "type": "string", "nullable": false },
+        { "name": "event_type", "type": "enum", "nullable": false },
+        { "name": "event_date", "type": "date", "nullable": false },
+        { "name": "signal_summary", "type": "string", "nullable": false },
+        { "name": "source_url", "type": "url", "nullable": true },
+        { "name": "confidence_score", "type": "float", "nullable": false },
+        { "name": "reviewed", "type": "bool", "nullable": false },
+        { "name": "flagged_for_action", "type": "bool", "nullable": false }
+      ]
+    }
+  }
+}
