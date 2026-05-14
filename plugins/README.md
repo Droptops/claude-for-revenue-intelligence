@@ -9,5 +9,7 @@ Status values: `built` (directory present with a runnable demo), `stub` (directo
 |---|---|---|
 | ae | `ae/` | built |
 | sales-leadership | `sales-leadership/` | built |
-| revops | `revops/` | planned (directory exists but empty) |
-| competitive-intel | `competitive-intel/` | planned (directory exists but empty) |
+| customer-success | `customer-success/` | built |
+| revops | `revops/` | built |
+| growth | `growth/` | built |
+| competitive-intel | `competitive-intel/` | built |

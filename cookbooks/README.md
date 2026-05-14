@@ -8,6 +8,9 @@ Status values: `built` (cookbook file present with steps and sample output), `st
 | Cookbook | File | Status |
 |---|---|---|
 | morning_dossier | `morning_dossier.md` | built |
+| revenue_command_center | `revenue_command_center.md` | built |
+| growth_command_center | `growth_command_center.md` | built |
+| intent_activation_and_competitive_response | `intent_activation_and_competitive_response.md` | built |
 | pre_announcement_watcher | `pre_announcement_watcher.md` | planned (cookbook planned; see `agents/trigger_event_monitor/pre_announcement_watcher.py` for the agent module) |
 | signal_velocity_monitor | `signal_velocity_monitor.md` | planned |
 | renewal_radar | `renewal_radar.md` | planned |

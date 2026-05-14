@@ -8,4 +8,4 @@ MCP connectors bind external systems of record to the six-part schema. Each conn
 
 All connectors default to read-only. Write operations require explicit operator opt-in — they are gated behind a per-connector configuration flag that defaults to `false`, and no connector is permitted to write on its own initiative.
 
-**Status: no connectors built yet.** Planned integrations: Salesforce, Gong, Outreach, Slack, Google Drive.
+**Status: no connectors built yet.** Planned integrations: Salesforce, Gong, Outreach, Slack, Google Drive, 6sense, ZoomInfo, Search Console, GA4, and ad platforms.
