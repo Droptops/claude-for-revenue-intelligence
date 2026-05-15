@@ -6,12 +6,3 @@
   expected:
     must_include_slots: [signature_authority, persona_graph, funnel_telemetry, outcome_telemetry, conversation_evidence, trigger_events]
     theory_constants_include: [anti_qualification]
-- id: fork_002
-  category: example_fork
-  description: "PLG fork replaces enterprise funnel slots with usage-centered slots"
-  inputs:
-    skill_file: examples/forks/plg-self-serve/SKILL.md
-  expected:
-    must_include_slots: [product_usage_telemetry, activation_events, expansion_signals]
-    must_exclude_slots: [funnel_telemetry, signature_authority, persona_graph]
-    theory_constants_include: [activation]

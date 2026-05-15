@@ -15,9 +15,6 @@ CLAUDE.local.md
 .env
 .env.*
 
-# Local competitive-intel inputs
-plugins/competitive-intel/competitor_list.yaml
-
 # Editor / OS noise
 .DS_Store
 Thumbs.db

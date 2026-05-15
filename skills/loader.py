@@ -67,20 +67,20 @@ class SkillConfig:
             paths[name] = (self.skill_dir / slot["path"]).resolve()
         return paths
 
-    def schema_manifest_path(self) -> Path:
-        return (self.skill_dir / "schema" / "manifest.json").resolve()
-
     def schema_manifest(self) -> dict[str, Any]:
-        path = self.schema_manifest_path()
-        if not path.exists():
-            raise SkillLoadError(f"{self.name!r} has no schema manifest at {path}")
-        try:
-            data = json.loads(path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError as exc:
-            raise SkillLoadError(f"{path} has invalid JSON: {exc}") from exc
-        if not isinstance(data, dict):
-            raise SkillLoadError(f"{path} must contain a JSON object")
-        return data
+        """Slot-level manifest derived from ``schema_slots``.
+
+        Column-level contracts live in the per-slot Markdown files. Tools that
+        need column details should read those directly; tools that only need
+        slot names and paths use this synthesized view.
+        """
+        return {
+            "version": 1,
+            "slots": {
+                slot["name"]: {"path": slot["path"]}
+                for slot in self.schema_slots
+            },
+        }
 
 
 def repo_root(start: Path | None = None) -> Path:

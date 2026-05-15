@@ -27,7 +27,6 @@ PROFILE_FIELDS: dict[str, Any] = {
     "aq_ratio_baseline": None,
     "aq_thresholds": None,
     "board_metric": None,
-    "competitor_categories": [],
 }
 
 
@@ -104,11 +103,6 @@ def collect_interactive_fields(root: Path, selected_skill: str | None = None) ->
     fields["avg_cycle_days"] = _coerce_number(str(_prompt("avg_cycle_days", "")))
     fields["aq_ratio_baseline"] = _coerce_number(str(_prompt("aq_ratio_baseline", "")))
     fields["board_metric"] = _prompt("board_metric", None)
-    categories = _prompt("competitor_categories comma-separated", "")
-    if categories:
-        fields["competitor_categories"] = [
-            item.strip() for item in str(categories).split(",") if item.strip()
-        ]
     return fields
 
 
