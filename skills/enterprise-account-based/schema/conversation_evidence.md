@@ -21,7 +21,7 @@ An index over call recordings and their post-mortems. The slot stores summaries 
 - `primary_reason` is a single normalized label (e.g. PRICE, FIT, TIMING, CHAMPION_LOST, INCUMBENT, NO_DECISION).
 - `secondary_reasons` is a list of zero or more labels from the same vocabulary.
 - `feature_gaps` is a list of capability-category labels (no vendor names — capability categories only).
-- `competitor_named` is a boolean. Specific competitor identities, if needed, live in the competitive-intel plugin's local store, not in this schema.
+- `competitor_named` is a boolean. Specific competitor identities, if needed, live in an operator-local store, not in this schema.
 
 ## Notes on data quality / known gaps
 

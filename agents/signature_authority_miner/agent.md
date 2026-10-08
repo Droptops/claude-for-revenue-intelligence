@@ -18,10 +18,31 @@ active skill's `signature_authority` schema slot.
 2. Call `sec_edgar_fetcher.fetch_filings(cik, form_types)` to obtain filing
    metadata and exhibit URLs.
 3. For each exhibit, retrieve the document text through the fetcher.
-4. Call `signatory_extractor.extract_signatories(filing_text, source_url)` for
-   each document.
+4. Call one of the two extractors on each document:
+   - `signatory_extractor.extract_signatories(text, source_url)` — regex
+     baseline. Deterministic, no API key, no network. Use as a fallback or for
+     deterministic eval.
+   - `signatory_extractor.extract_signatories_claude(text, source_url)` —
+     Claude Messages API call with prompt caching on the system instructions.
+     Requires `pip install '.[llm]'` and `ANTHROPIC_API_KEY`. Use for
+     production extraction over real filings.
 5. For each extracted signatory, produce one row shaped by the active skill's
    `signature_authority` contract.
+
+## Choosing An Extractor
+
+The Claude path is the default for real filings: it handles irregular
+formatting, paraphrased signature blocks, and contracts that the regex misses.
+The regex baseline is canonical-format only. Use the regex path when:
+
+- Running tests or eval suites (deterministic).
+- The filing text is known to be canonical (`By: <Name>` / `Name:` / `Title:` /
+  `Date:` style).
+- No API key is available.
+
+`core/model_arbitration.py` defines the `signature_authority_extraction`
+workflow policy. The Claude extractor enables ephemeral prompt caching on the
+system prompt so a batch run amortizes the instruction tokens across filings.
 
 ## Output Rules
 

@@ -17,8 +17,8 @@ repository.
 
 You have two ways to fill in the profile:
 
-1. **Guided:** run the cold-start interview with `claude --profile`. Claude
-   reads each question in the **Interview** section below, prompts you, and
+1. **Guided:** run the cold-start interview with `python tools/cold_start.py`.
+   It reads each question in the **Interview** section below, prompts you, and
    writes your answers into the **Profile fields** YAML block.
 2. **Manual:** copy this file to `CLAUDE.local.md`, answer each question inline
    if you like, then fill in the YAML block at the bottom of the local copy. The
@@ -61,8 +61,8 @@ anywhere; the system is designed to work without them.
    `enterprise-account-based` unless you are deliberately forking a new motion.
    Run `python -c "from skills.loader import list_available_skills; [print(f'{s.name}: {s.description}') for s in list_available_skills()]"`.
 
-2. **What is your primary role?** (AE / Sales Leader / RevOps / Competitive
-   Intel / Other)
+2. **What is your primary role?** (AE / Sales Leader / RevOps / Customer
+   Success / Other)
 
 3. **What is your typical deal size range?** (e.g. `$60k-$240k ARR`,
    `$500k+ ARR`)
@@ -90,12 +90,7 @@ anywhere; the system is designed to work without them.
    / services spend to implementation / product spend on the buyer's side? You
    may override the active skill's thresholds in `aq_thresholds` below.
 
-10. **What competitor categories are most active in your deals?** Categories
-    only, e.g. `legacy-incumbent`, `point-tool`, `open-source-DIY`. Specific
-    vendor names belong in `plugins/competitive-intel/competitor_list.yaml` on
-    your local machine, not in this file.
-
-11. **Do you have a board / plan delta you track?** (Yes / No. If yes, what is
+10. **Do you have a board / plan delta you track?** (Yes / No. If yes, what is
     the primary metric? e.g. `net-new ARR vs plan`, `pipeline coverage`,
     `forecast accuracy`.)
 
@@ -106,7 +101,7 @@ you do not use as `null`.
 
 ```yaml
 active_skill: enterprise-account-based # selected skill id
-role: null                             # one of: AE | SALES_LEADER | REVOPS | COMPETITIVE_INTEL | OTHER
+role: null                             # one of: AE | SALES_LEADER | REVOPS | CUSTOMER_SUCCESS | OTHER
 deal_size_range: null                  # free-text label, e.g. "$60k-$240k ARR"
 crm: null                              # one of: SALESFORCE | HUBSPOT | OTHER | NONE
 call_platform: null                    # one of: GONG | CHORUS | NONE
@@ -114,7 +109,6 @@ avg_cycle_days: null                   # integer
 aq_ratio_baseline: null                # float - observed ratio on closed-won deals
 aq_thresholds: null                    # optional local override; defaults come from active skill
 board_metric: null                     # free-text, or null if not tracked
-competitor_categories: []              # list of category labels, no vendor names
 ```
 
 At runtime the loader binds `schema_slots`, `agent_roster`, `plugin_defaults`,
@@ -133,9 +127,9 @@ needs an explicit override.
   board-vs-plan view falls back to a generic pipeline-coverage view.
 - **RevOps plugin** (`plugins/revops/`): reads `crm` and any local
   `aq_thresholds`. Uses active-skill theory constants to label rows.
-- **Competitive Intel plugin** (`plugins/competitive-intel/`): reads
-  `competitor_categories` and the local competitor list. Never emits specific
-  vendor names that are not in the operator's local list.
+- **Customer Success plugin** (`plugins/customer-success/`): reads
+  `aq_ratio_baseline` and active-skill theory constants to label renewal
+  and expansion posture.
 
 ## Disclaimer
 

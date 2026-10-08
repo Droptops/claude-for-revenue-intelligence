@@ -103,29 +103,6 @@ class SkillLoaderTests(unittest.TestCase):
         self.assertEqual(real_change["anti_qual_label"], "REAL_CHANGE")
         self.assertEqual(edge["anti_qual_label"], "AMBIGUOUS")
 
-    def test_example_fork_stubs_have_valid_skill_and_schema_directory(self):
-        fork_root = ROOT / "examples" / "forks"
-        expected = {
-            "finserv-enterprise",
-            "plg-self-serve",
-            "healthcare-patient-acquisition",
-        }
-        found = {path.parent.name for path in fork_root.glob("*/SKILL.md")}
-
-        self.assertEqual(found, expected)
-        for skill_file in sorted(fork_root.glob("*/SKILL.md")):
-            skill = skill_loader.load_skill_file(skill_file)
-            self.assertTrue((skill.skill_dir / "README.md").exists())
-            self.assertTrue((skill.skill_dir / "agents.md").exists())
-            self.assertTrue((skill.skill_dir / "schema").is_dir())
-            manifest = skill.schema_manifest()
-            self.assertEqual(
-                set(manifest["slots"]),
-                {slot["name"] for slot in skill.schema_slots},
-            )
-            for path in skill.schema_slot_paths().values():
-                self.assertTrue(path.exists(), path)
-
     def test_invalid_skill_metadata_fails_loudly(self):
         with tempfile.TemporaryDirectory() as tmp:
             skill_file = Path(tmp) / "SKILL.md"

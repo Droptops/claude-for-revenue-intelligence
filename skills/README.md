@@ -23,30 +23,18 @@ The loader in `skills/loader.py` reads the selected skill from
 `CLAUDE.local.md` and falls back to `enterprise-account-based` when no local
 selection exists.
 
-Every motion skill schema directory should include `manifest.json`, a
-machine-readable summary of the slot names and columns. Markdown remains the
-human-readable contract; the manifest gives tests and tools something stable to
-validate.
+Column-level contracts live in each slot's Markdown file under `schema/`.
+A slot-level manifest is synthesized at load time from `SKILL.md`; there is
+no separate `manifest.json` to keep in sync.
 
-## Installed Motion Skills
+## Installed motion skills
 
-- [`enterprise-account-based`](enterprise-account-based/SKILL.md): the original
-  six-part revenue-intelligence model, now packaged as the default reference
-  skill.
+- [`enterprise-account-based`](enterprise-account-based/SKILL.md) — the
+  default reference skill. Six-slot enterprise schema with anti-qualification
+  theory constants.
 
-## Example Fork Stubs
-
-- [`finserv-enterprise`](../examples/forks/finserv-enterprise/): current
-  six-part model plus regulatory-filings emphasis.
-- [`plg-self-serve`](../examples/forks/plg-self-serve/): product usage,
-  activation events, and expansion signals.
-- [`healthcare-patient-acquisition`](../examples/forks/healthcare-patient-acquisition/):
-  referral authority, episode telemetry, and outcome evidence.
-
-## Legacy Operator Template
+## Legacy operator template
 
 `deal_review_template` remains in place for compatibility. It is a reusable
-operator output template, not a motion-specialization skill, and is intentionally
-not loaded by `skills/loader.py`. It is a candidate for relocation to
-`cookbooks/` in a follow-up after its references and intended ownership are
-reviewed.
+operator output template, not a motion-specialization skill, and is
+intentionally not loaded by `skills/loader.py`.

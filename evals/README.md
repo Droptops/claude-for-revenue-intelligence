@@ -1,18 +1,20 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 # Evals
 
-The evals are deterministic behavior checks for scorer outputs. Unit tests
-verify code paths and implementation details. Evals verify that known input
-cases continue to produce the same labels, scores, ordering, and delta buckets
-that an operator would expect from the current heuristics.
+Two harnesses run side by side.
 
-The runner is stdlib-only. The YAML case files use a small subset parsed by
-`evals/run_evals.py`: dictionaries, lists, strings, numbers, booleans, and
-nulls. This keeps local and CI execution dependency-free.
+`evals/run_evals.py` is a deterministic suite. Each `evals/<suite>/cases.yaml`
+file lists input cases and their expected outputs; the runner asserts each
+scorer produces the expected labels, scores, ordering, or delta buckets. It
+is stdlib-only.
 
-Some newer workflow fixtures are JSONL files consumed directly by tests. These
-are still deterministic guardrail cases, not benchmarks and not claims about
-model performance.
+`evals/anti_qualification_cohort.py` generates 200 synthetic deals with
+planted buyer intent and reports precision / recall / F1 for the scorer's
+`POLITICAL_COVER` predictions against ground-truth implementation failure.
+Output is deterministic (seeded). CI gates on a sanity F1 floor, not a
+calibration claim.
+
+The JSONL fixtures are consumed directly by `tests/test_enterprise_revenue_plays.py`.
 
 ## Files
 
@@ -24,13 +26,9 @@ model performance.
 - `forkability/cases.yaml`: expected skill slot bindings and theory constants.
 - `revenue_play_eval_cases.jsonl`: expected outcomes for pipeline risk,
   renewal radar, schema health, and model arbitration.
-- `growth_eval_cases.jsonl`: expected outcomes for market-share posture,
-  campaign ROI, search intent, and growth model arbitration.
-- `intent_activation_eval_cases.jsonl`: expected outcomes for account-level
-  intent sequencing, competitive battlecards, public asset monitoring, and
-  related model arbitration.
+- `anti_qualification_cohort.py`: synthetic cohort harness with P/R/F1 report.
 
-## Add a YAML Case
+## Add a YAML case
 
 Each YAML suite has an `evals/<suite>/cases.yaml` file. Add one top-level list
 item per case:
@@ -51,7 +49,7 @@ item per case:
 ```
 
 Use `expected.raises` for cases that should raise a known exception. Use
-suite-specific expected fields for scorer behavior:
+suite-specific expected fields:
 
 - `anti_qualification`: `anti_qual_label`, `confidence`, `ratio_approx`,
   `raises`
@@ -62,18 +60,15 @@ suite-specific expected fields for scorer behavior:
 - `forkability`: `must_include_slots`, `must_exclude_slots`,
   `theory_constants_include`
 
-## Run Locally
+## Run locally
 
 ```bash
 python evals/run_evals.py
+python evals/anti_qualification_cohort.py
 python -m unittest discover -s tests
 ```
 
-`evals/run_evals.py` discovers every `evals/*/cases.yaml` file, runs the
-corresponding scorer, prints a per-suite summary, and prints details for any
-failed case. The unit test suite covers the JSONL workflow fixtures.
+## Exit codes
 
-## Exit Codes
-
-- `0`: all YAML cases passed
-- `1`: one or more YAML cases failed
+- `0`: all cases passed
+- `1`: one or more cases failed, or F1 below the cohort sanity floor

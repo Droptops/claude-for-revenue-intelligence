@@ -24,14 +24,11 @@
     "ae",
     "sales-leadership",
     "revops",
-    "competitive-intel"
+    "customer-success"
   ],
   "cookbook_set": [
     "morning_dossier",
-    "pre_announcement_watcher",
-    "signal_velocity_monitor",
-    "renewal_radar",
-    "win_loss_interview_integrator"
+    "revenue_command_center"
   ],
   "connector_bindings": [
     "salesforce",

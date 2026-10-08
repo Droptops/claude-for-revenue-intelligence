@@ -1,243 +1,170 @@
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 # claude-for-revenue-intelligence
 
-`claude-for-revenue-intelligence` is a small, readable agent harness for
-schema-driven revenue intelligence. It is designed to be forked and specialized
-through skills: the base stays motion-agnostic, while each skill binds schema
-slots, agent roster, persona plugin defaults, cookbook set, connector bindings,
-and motion-specific theory constants.
+A small, readable agent harness for enterprise account-based revenue
+intelligence. One workflow (the **morning dossier**), one heuristic that earns
+its keep (**anti-qualification ratio**), one agent that actually calls Claude
+(**signature_authority_miner**).
 
-Nothing here is a vendor product or a commercial benchmark. It is a reference
-implementation meant to be read end-to-end and adapted.
+The repo is meant to be read end-to-end and adapted. It is not a vendor
+product. Every output is a draft for human reviewer judgment.
 
-## The Pattern
+See [`docs/WHY.md`](docs/WHY.md) for the one-page rationale.
 
-The harness follows this flow:
+## The shape
 
-`schema -> agents -> persona plugins -> cookbooks -> connectors`
-
-- **Schema**: column contracts supplied by the active skill.
-- **Agents**: small modules that populate or watch schema slots.
-- **Persona plugins**: role-shaped views over the same skill-bound schema.
-- **Cookbooks**: end-to-end workflows that compose agents and plugins.
-- **Connectors**: read/write adapters for systems of record, defaulting to
-  read-only.
-
-The loader at `skills/loader.py` reads `CLAUDE.local.md`, selects the active
-skill, and exposes the bindings agents need. If no local profile exists, the
-loader falls back to `enterprise-account-based`.
-
-## How To Specialize
-
-Run the cold-start interview in `QUICKSTART.md` and choose an installed skill,
-or fork one of the examples under `examples/forks/`.
-
-A specialization lives in a folder with a `SKILL.md` and its own schema
-contracts. The base harness should not hardcode motion assumptions; it should
-read schema slots and theory constants from the active skill.
-
-Executable helpers make that loop concrete:
-
-```bash
-python tools/inspect_skill.py
-python tools/cold_start.py --non-interactive --skill enterprise-account-based --profile-path CLAUDE.local.md
-python tools/new_skill.py plg-self-serve skills/my-plg-motion
+```
+schema -> agents -> persona plugins -> cookbooks -> connectors
 ```
 
-`inspect_skill.py` prints the active bindings. `cold_start.py` writes a local
-practice profile. `new_skill.py` copies an example fork into a new skill folder.
+- **Schema**: six column contracts supplied by the active skill.
+- **Agents**: small modules that populate or watch schema slots.
+- **Plugins**: role-shaped views over the schema (AE, sales-leadership, revops,
+  customer-success).
+- **Cookbooks**: end-to-end workflows that compose agents and plugins.
+- **Connectors**: read/write adapters to systems of record, defaulting to
+  read-only.
 
-## Reference Skill
+`skills/loader.py` reads `CLAUDE.local.md` and binds the active skill's
+contracts at runtime. If no local profile exists, the default skill is
+`enterprise-account-based`.
 
-The default reference skill is:
+## The headline workflow
 
-- `skills/enterprise-account-based/`
+`cookbooks/morning_dossier.md` defines the morning dossier: a one-page
+briefing for an AE's priority accounts assembled from overnight trigger
+events, persona-graph gaps, funnel outliers, and anti-qualification labels.
 
-This is the original six-part model, relocated without changing its semantics.
-It remains the default behavior for current agents, plugins, demos, and evals.
+Run the synthetic demo end-to-end:
 
-## Example Forks
+```bash
+python demo/morning_dossier_demo.py
+```
 
-Stub overlays demonstrate that the harness can bind very different motions:
+The dossier ends with recommended next actions. It does not act. No emails are
+sent; no CRM rows are written.
 
-- `examples/forks/finserv-enterprise/`: current six-part model plus regulatory
-  filings emphasis.
-- `examples/forks/plg-self-serve/`: product usage, activation events, and
-  expansion signals.
-- `examples/forks/healthcare-patient-acquisition/`: referral authority, episode
-  telemetry, and outcome evidence.
+## The schema (enterprise-account-based)
 
-The examples intentionally do not implement full agents.
+Six slots, contracted per skill. Column-level contracts live in
+[`skills/enterprise-account-based/schema/`](skills/enterprise-account-based/schema/).
 
-## Reference Skill Slots
-
-The `enterprise-account-based` skill supplies these schema slots:
-
-- **`signature_authority`**: actual signatory data from public SEC filings and
-  contract corpora; pen-on-paper authority, not titles.
-- **`persona_graph`**: relationship and influence map per account; who decides,
-  who blocks, who champions, and how those edges are observed.
-- **`funnel_telemetry`**: first-contact date, touch count, days to close,
-  opportunity counter, outlier filter, and the anti-qualification ratio. The
-  ratio formula and thresholds are skill-level theory constants.
-- **`outcome_telemetry`**: post-implementation news, contract diffs, renewal
-  signals; the slot that tells you whether the deal you closed actually became
-  a customer.
-- **`conversation_evidence`**: call references, closed-lost post-mortems, and
-  feature-gap flags. Pointers, not transcripts.
-- **`trigger_events`**: earnings language, hiring signals, executive movement,
-  regulatory filings, competitor signals, and pre-announcement signals.
-
-Column-level contracts live in `skills/enterprise-account-based/schema/`.
-The root `schema/README.md` explains why schema contracts now live per skill.
-Each schema directory also carries a `manifest.json` so tests and tools can
-validate slot contracts without scraping Markdown tables.
+- **`signature_authority`** — pen-on-paper authority from public filings.
+- **`persona_graph`** — relationship and influence map per account.
+- **`funnel_telemetry`** — opportunity-level facts: dates, touches, ratios,
+  outlier flags.
+- **`outcome_telemetry`** — post-close signals: implementation start, contract
+  diffs, renewal posture.
+- **`conversation_evidence`** — call references and closed-lost post-mortems.
+- **`trigger_events`** — earnings language, hiring, executive movement,
+  filings, pre-announcement signals.
 
 ## Agents
 
-Each agent populates or watches a skill-bound schema slot. One responsibility
-per agent.
+| Agent | Slot it populates |
+|---|---|
+| `signature_authority_miner` | `signature_authority` |
+| `persona_graph_builder` | `persona_graph` |
+| `funnel_telemetry_loader` | `funnel_telemetry` |
+| `outcome_telemetry_watcher` | `outcome_telemetry` |
+| `conversation_evidence_indexer` | `conversation_evidence` |
+| `trigger_event_monitor` | `trigger_events` |
+| `anti_qualification_scorer` | computes the ratio over `funnel_telemetry` |
 
-- **Signature Authority Miner**: populates `signature_authority` from public
-  filings and contract corpora.
-- **Persona Graph Builder**: assembles `persona_graph` per account.
-- **Funnel Telemetry Loader**: loads `funnel_telemetry` from CRM and outreach
-  systems.
-- **Outcome Telemetry Watcher**: watches news, filings, and contract diffs into
-  `outcome_telemetry`.
-- **Conversation Evidence Indexer**: indexes call references into
-  `conversation_evidence`.
-- **Trigger Event Monitor**: emits records into `trigger_events`.
-- **Anti-Qualification Scorer**: computes the consulting/implementation spend
-  ratio using thresholds from the active skill.
+Most agents are deterministic transforms over schema data. The exception is
+**`signature_authority_miner`**, which has two paths:
 
-See `agents/`.
+- **Regex baseline** (`signatory_extractor.extract_signatories`) — no
+  dependencies, no API key, used by tests.
+- **Claude path** (`signatory_extractor.extract_signatories_claude`) — calls
+  the Anthropic Messages API with ephemeral prompt caching on the system
+  prompt. Requires `pip install '.[llm]'` and `ANTHROPIC_API_KEY`.
 
 ## Plugins
 
-Plugins are persona-shaped views over the active skill's schema. They do not
-introduce new data; they assemble role-specific summaries.
+Role-shaped views over the schema. They do not introduce new data.
 
-- **`ae`**: account-executive-shaped views, including target-account dossiers
-  and next-best action scoring.
-- **`sales-leadership`**: pipeline-level views, board-vs-plan deltas,
-  anti-qualification cohort reporting, and pipeline risk inspection.
-- **`revops`**: schema health, source quality, and coverage gaps.
-- **`customer-success`**: renewal risk and expansion-fit radar.
-- **`growth`**: market-share posture, campaign ROI/payback, search intent,
-  category-demand capture, and intent-to-sequence drafting.
-- **`competitive-intel`**: competitor signals, battlecards, and permitted
-  public asset-change review.
-
-See `plugins/`.
-
-## Cookbooks
-
-Cookbooks are readable workflows that compose agents and plugins.
-
-- **Morning dossier**: daily per-account briefing assembled across the
-  reference skill slots.
-- **Revenue command center**: weekly forecast and daily inspection loop that
-  runs schema health, pipeline risk, renewal/expansion radar, and model
-  arbitration.
-- **Growth command center**: category-demand, campaign ROI, and search-intent
-  loop for market creation and capture.
-- **Intent activation and competitive response**: high-intent account routing,
-  compliant sequence drafts, battlecards, and public asset-change review.
-- **Pre-announcement watcher**: planned workflow for publicly observable
-  pre-announcement signals.
-- **Signal velocity monitor**: planned rate-of-change workflow.
-- **Renewal radar**: planned renewal-risk workflow.
-- **Win/loss interview integrator**: planned post-mortem workflow.
-
-See `cookbooks/`.
-
-## Connectors
-
-Connector stubs bind systems of record to the active skill's schema. The
-minimal code contract lives in `connectors/base.py`, with an in-memory test
-connector in `connectors/mock.py`.
-
-Reference connector names include Salesforce, Gong, Outreach, Slack, Google
-Drive, 6sense, ZoomInfo, Search Console, GA4, and ad platforms. Connectors
-default to read-only. Write operations require explicit operator opt-in. Forks
-may bind different connector names in their own `SKILL.md`.
-
-See `connectors/`.
-
-## Getting Started
-
-See `QUICKSTART.md` for prerequisites, validation, and the cold-start interview
-that produces a per-installation `CLAUDE.local.md` practice profile with an
-`active_skill`.
+- **`ae`** — target-account dossiers and next-best-action scoring.
+- **`sales-leadership`** — pipeline risk, board-vs-plan deltas.
+- **`revops`** — schema health, coverage gaps.
+- **`customer-success`** — renewal risk and expansion-fit radar.
 
 ## Validation
 
-The repository has no required third-party Python dependencies. Run:
+The repo has no required Python dependencies. Tests, evals, and demos all run
+on the standard library.
 
 ```bash
 python -m unittest discover -s tests
 python evals/run_evals.py
+python evals/anti_qualification_cohort.py
 python tools/inspect_skill.py --json
-python examples/forks/plg-self-serve/demo.py
+python demo/morning_dossier_demo.py
 ```
 
-The GitHub Actions workflow in `.github/workflows/validate.yml` runs the tests,
-evals, forkability tool checks, and smoke checks for every built agent and
-plugin demo.
+The cohort eval generates 200 synthetic deals with planted buyer intent and
+reports precision / recall / F1 for the scorer's `POLITICAL_COVER` predictions
+against ground-truth implementation failure. Numbers are deterministic
+(seeded); the eval gates CI on a sanity floor, not a calibration claim.
 
-## Model Arbitration
+## Anti-qualification thresholds
 
-`core/model_arbitration.py` provides a token-aware routing policy for each built
-workflow. It picks the smallest Claude model tier that satisfies context size,
-reasoning need, relative cost band, and high-stakes escalation flags. This
-keeps cheap deterministic checks on a fast model path while preserving an
-explicit escalation route for board-facing forecast or renewal narratives.
+The `anti_qualification_scorer` reads its thresholds from the active skill:
 
-Design rationale and public reference links live in
-[`docs/revenue_intelligence_design_notes.md`](docs/revenue_intelligence_design_notes.md),
-[`docs/growth_intelligence_design_notes.md`](docs/growth_intelligence_design_notes.md),
-and
-[`docs/intent_activation_design_notes.md`](docs/intent_activation_design_notes.md).
+```yaml
+political_cover_min: 3.0    # ratio > 3.0  → POLITICAL_COVER
+real_change_max:    1.5    # ratio < 1.5  → REAL_CHANGE
+                            # otherwise   → AMBIGUOUS
+```
 
-## Roadmap
+Operators override them locally in `CLAUDE.local.md` under `aq_thresholds`.
 
-- **Day 1.** Repo skeleton: schema slots, agent / plugin / cookbook /
-  connector stubs, README + QUICKSTART + CLAUDE.md scaffold.
-- **Day 2.** Schema column contracts, cold-start profile workflow, and first
-  runnable agent stub.
-- **Day 3.** Morning dossier, AE and sales-leadership scorers, trigger-event
-  monitor, anti-qualification scorer, and deferred connector stubs.
-- **Day 4.** Skills make the harness motion-agnostic; example forks prove that
-  the base can bind different slot sets without hardcoding a motion.
-- **Day 5.** Enterprise revenue, growth, intent activation, competitive
-  response, and forkability tooling make the repo executable end to end.
+## Model arbitration
+
+`core/model_arbitration.py` is a token-aware router that picks the smallest
+Claude tier satisfying each workflow's context size, reasoning floor, and cost
+band. It returns a model name; the actual API call lives in the agent. Six
+workflows are wired:
+
+- `schema_health_gate`
+- `pipeline_risk_radar`
+- `renewal_expansion_radar`
+- `win_loss_pattern_miner`
+- `executive_forecast_memo`
+- `signature_authority_extraction`
+
+Prompt caching is recommended for workflows with `cacheable_context=True` and
+input over ~8k tokens.
+
+## Cold start
+
+```bash
+python tools/cold_start.py
+# or, non-interactive:
+python tools/cold_start.py --non-interactive --skill enterprise-account-based --force
+python tools/inspect_skill.py
+```
+
+`CLAUDE.local.md` is git-ignored. No customer names, exec names, or deal names
+belong in this repo.
 
 ## Contributing
 
-See `CONTRIBUTING.md` for repository scope, what does and does not belong here,
-and the pull-request checklist. Operator-specific data belongs in
-`CLAUDE.local.md` and other locally ignored files, not in this repository.
-
-## Influences And Prior Art
-
-This repository draws on the public discourse of revenue-intelligence product
-categories, the public canon of sales qualification and methodology, and
-adjacent buyer-behavior analysis traditions. The current architecture is also
-influenced by the February 2026 Karpathy framing of a maximally forkable repo
-whose skills fork it into exotic configurations.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md). Operator-specific data goes in
+locally-ignored files, never in the repository.
 
 ## Disclaimers
 
-- **Drafts, not decisions.** All agent and cookbook outputs are drafts intended
-  for human reviewer judgment. Nothing here claims completeness or accuracy.
+- **Drafts, not decisions.** All agent and cookbook outputs are drafts for
+  human reviewer judgment.
 - **Not advice.** Outputs do not constitute legal, financial, or investment
   advice.
-- **Web monitoring compliance.** Pre-announcement-watcher and any similar
-  feature that observes external sites must be used in compliance with each
-  target site's `robots.txt` and Terms of Service. No unauthorized scraping is
-  performed or condoned.
-- **No embedded customer or executive data.** This repository contains no
-  customer names, executive names, or proprietary methodology references.
-  Anything operator-specific belongs in the cold-start `CLAUDE.local.md`
-  practice profile produced locally, not in this repo.
+- **Web monitoring compliance.** Pre-announcement watcher and any feature that
+  observes external sites must respect each target site's `robots.txt` and
+  Terms of Service.
+- **No embedded customer or executive data.** Operator-specific data belongs
+  in `CLAUDE.local.md`.
+
+## License
+
+Apache-2.0. See [`LICENSE`](LICENSE).

@@ -34,8 +34,8 @@ The `.gitignore` enforces some of this mechanically. The rest is enforced by rev
 Everything operator-specific belongs in files that are never committed:
 
 - `CLAUDE.local.md` — your filled-in practice profile (ignored).
-- `plugins/competitive-intel/competitor_list.yaml` — your competitor list (ignored).
-- `*.local.yaml`, `*.local.yml`, `*.local.json` — any other local config (ignored).
+- `*.local.yaml`, `*.local.yml`, `*.local.json` — any local config including
+  competitor lists, account watchlists, etc. (ignored).
 - `.env`, `.env.*` — credentials (ignored).
 
 If a piece of information is specific to one operator, one company, or one deal, it goes in a local file. A contribution that puts operator-specific data into the repository will be rejected.

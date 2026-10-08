@@ -5,9 +5,10 @@
 
 This cookbook produces a one-page **morning briefing** for an AE's top priority
 accounts. It combines overnight trigger events, persona-graph coverage gaps,
-funnel-telemetry outliers, and pre-announcement web signals from the operator's
-local competitor list. The cookbook does not act on the AE's behalf. Every step
-ends in a draft the reviewer must approve before any outreach happens.
+funnel-telemetry outliers, and pre-announcement web signals from an
+operator-local competitor list. The cookbook does not act on the AE's behalf.
+Every step ends in a draft the reviewer must approve before any outreach
+happens.
 
 ## Prerequisites
 
@@ -17,8 +18,10 @@ ends in a draft the reviewer must approve before any outreach happens.
 - **At least one account** has rows in the active skill's `funnel_telemetry` and
   `trigger_events` slots.
 - **Persona graph populated** for the priority accounts, even if sparse.
-- **Competitor list at `plugins/competitive-intel/competitor_list.yaml`**
-  (operator-local, not committed). Empty list is allowed.
+- **Operator-local competitor list** for pre-announcement monitoring (e.g.
+  `competitor_list.local.yaml`, git-ignored by the `*.local.yaml` pattern).
+  Empty list is allowed; the pre-announcement step skips when no domains are
+  configured.
 - **AE plugin loaded** (`plugins/ae/`).
 
 ## Step 1 - Pull Overnight Trigger Events
@@ -48,7 +51,7 @@ decides whether each is a real outlier or stale CRM data.
 ## Step 4 - Run The Pre-Announcement Watcher
 
 Run `agents/trigger_event_monitor` in pre-announcement mode using the
-operator-local `competitor_list.yaml`.
+operator-local competitor list.
 
 **Compliance reminder.** Pre-announcement monitoring relies on
 `pre_announcement_watcher.py`. The caller is responsible for confirming

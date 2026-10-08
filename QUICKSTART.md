@@ -4,30 +4,36 @@
 ## 1. Prerequisites
 
 - Python 3.10 or later.
-- An Anthropic API key (`ANTHROPIC_API_KEY`) if you run Claude-backed flows.
-- Optional credentials for source systems you intend to wire up: Salesforce,
-  Gong, Outreach, Slack, Google Drive, or fork-specific connectors.
+- An Anthropic API key (`ANTHROPIC_API_KEY`) **only** if you run the Claude
+  path of the signature-authority miner. Everything else runs on the standard
+  library.
 
 ## 2. Install
 
-No external Python dependencies are required. All agent, loader, and scorer
-modules use the standard library only.
+No required external Python dependencies. Optional Claude integration:
 
-## 3. Validate The Repo
+```bash
+pip install '.[llm]'    # adds anthropic>=0.40.0
+```
 
-Run the unit tests:
+## 3. Validate the repo
 
 ```bash
 python -m unittest discover -s tests
+python evals/run_evals.py
+python evals/anti_qualification_cohort.py
 ```
 
-Run the evals:
+## 4. Run the morning dossier on synthetic data
 
 ```bash
-python evals/run_evals.py
+python demo/morning_dossier_demo.py
 ```
 
-Run the demo smoke checks:
+This composes the dossier end-to-end across the synthetic fixtures in
+`demo/synthetic_data.py`. No network, no API key, no real names.
+
+## 5. Smoke-check the agents and plugins
 
 ```bash
 python agents/anti_qualification_scorer/aq_scorer.py
@@ -38,70 +44,36 @@ python agents/trigger_event_monitor/pre_announcement_watcher.py
 python core/model_arbitration.py
 python plugins/ae/best_next_first_dollar.py
 python plugins/customer-success/renewal_radar.py
-python plugins/competitive-intel/battlecard_builder.py
-python plugins/competitive-intel/cdn_feature_monitor.py
-python plugins/growth/market_share_tracker.py
-python plugins/growth/campaign_roi_tracker.py
-python plugins/growth/search_intent_mapper.py
-python plugins/growth/intent_sequence_builder.py
 python plugins/revops/schema_health.py
 python plugins/sales-leadership/board_vs_plan_scorer.py
 python plugins/sales-leadership/pipeline_risk_radar.py
 ```
 
-## 4. Cold-Start Interview
+## 6. Cold-start interview
 
-Run the cold-start helper to create `CLAUDE.local.md`. The file is ignored by
-git so local practice details do not get committed.
+Create `CLAUDE.local.md` so the loader picks up local overrides. The file is
+git-ignored.
 
 ```bash
 python tools/cold_start.py
-```
-
-For a non-interactive default install:
-
-```bash
+# or, non-interactive default:
 python tools/cold_start.py --non-interactive --skill enterprise-account-based --force
-```
-
-List installed motion skills and bindings with:
-
-```bash
 python tools/inspect_skill.py
 ```
 
-When agents run, `skills/loader.py` reads `CLAUDE.local.md`, loads the selected
-skill, and binds:
-
-- schema slots
-- agent roster
-- plugin defaults
-- cookbook set
-- connector bindings
-- theory constants
-
-If `CLAUDE.local.md` is absent or has no `active_skill`, the loader falls back to
+`skills/loader.py` reads `CLAUDE.local.md` and binds the active skill. If the
+local profile is absent or has no `active_skill`, the loader falls back to
 `enterprise-account-based`.
 
-See the interview prompts in `CLAUDE.md`. When running plugins, use
-`CLAUDE.local.md` if present and fall back to the template only for demos.
+## 7. Run the Claude extractor (optional)
 
-## 5. Create A New Skill From An Example
-
-Copy an example fork into a new installed skill:
+If `ANTHROPIC_API_KEY` is set, the `signatory_extractor` demo additionally
+runs the Claude path on the synthetic filing:
 
 ```bash
-python tools/new_skill.py plg-self-serve skills/my-plg-motion
+export ANTHROPIC_API_KEY=...
+python agents/signature_authority_miner/signatory_extractor.py
 ```
 
-Then set `active_skill: my-plg-motion` in `CLAUDE.local.md` and inspect it:
-
-```bash
-python tools/inspect_skill.py
-```
-
-The PLG example has a tiny runnable demo:
-
-```bash
-python examples/forks/plg-self-serve/demo.py
-```
+The Claude path uses ephemeral prompt caching on the system prompt so batch
+runs over multiple filings amortize the instruction tokens.

@@ -18,7 +18,6 @@ from skills.loader import SkillConfig, load_active_skill, load_skill  # noqa: E4
 
 
 def skill_payload(skill: SkillConfig) -> dict[str, Any]:
-    manifest = skill.schema_manifest()
     return {
         "name": skill.name,
         "description": skill.description,
@@ -27,8 +26,6 @@ def skill_payload(skill: SkillConfig) -> dict[str, Any]:
             name: str(path.relative_to(ROOT))
             for name, path in skill.schema_slot_paths().items()
         },
-        "schema_manifest": str(skill.schema_manifest_path().relative_to(ROOT)),
-        "manifest_slots": sorted(manifest.get("slots", {}).keys()),
         "agent_roster": skill.agent_roster,
         "plugin_defaults": skill.plugin_defaults,
         "cookbook_set": skill.cookbook_set,

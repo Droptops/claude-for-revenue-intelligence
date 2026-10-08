@@ -21,8 +21,8 @@ Forks may bind a different trigger-event taxonomy in their own schema.
 ## Inputs
 
 - `account_id` - internal identifier
-- `competitor_list` - operator-supplied YAML at
-  `plugins/competitive-intel/competitor_list.yaml` on the operator's machine
+- `competitor_list` - operator-supplied YAML (e.g. `competitor_list.local.yaml`)
+  on the operator's machine; git-ignored by the `*.local.yaml` pattern
 - `monitoring_config` - per-source toggles, snapshot window, and rate-limit
   overrides
 
